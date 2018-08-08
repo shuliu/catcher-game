@@ -1,5 +1,6 @@
 body {
-  background: #333; }
+  background: #333;
+}
 
 .elements {
   min-width: 100px;
@@ -8,19 +9,22 @@ body {
   position: fixed;
   left: 1em;
   top: 1em;
-  display: none; }
-  .elements:before {
-    width: 10px;
-    height: 10px;
-    content: "Elements list";
-    color: lightblue; }
+}
+
+.elements:before {
+  width: 10px;
+  height: 10px;
+  content: "Elements list";
+  color: lightblue;
+}
 
 .control {
   min-width: 100px;
   min-height: 100px;
   position: fixed;
   left: 1em;
-  top: 10em; }
+  top: 10em;
+}
 
 #gameBox {
   width: 500px;
@@ -28,11 +32,17 @@ body {
   margin: auto;
   background: #666;
   overflow: hidden;
-  position: relative; }
+  position: relative;
+}
 
 .gift {
   width: 20px;
   height: 20px;
   background: red;
   border-radius: 15px;
-  position: absolute; }
+  position: absolute;
+}
+
+.hide {
+  display: none;
+}

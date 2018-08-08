@@ -1,4 +1,5 @@
 /*eslint no-unused-vars: 0*/
+/*eslint ignore: TimelineMax*/
 
 /**
  * variables
@@ -11,19 +12,16 @@ const pointBillList = [1000, 800, 600, 400, 200];
 let   pointList     = [];
 const moveWidth     = 40; // 物件含左右搖版寬度
 const gameTime      = 60; // 遊戲時間
-let   timeLine      = new TimelineMax({
-  delay:0.5,
-  // repeat: 0,
-  // repeatDelay: 2,
-  onUpdate: updateStats,
-  onRepeat: updateReps,
-  onComplete: restart
-});
+let   timeLine      = new TimelineMax({delay:0.5});
 
 /**
  * methods
  */
 
+/**
+ * 建立禮物並加入時間軸內
+ * {number} point 禮物配給的點數面額
+ */
 const addGift = (point) => {
   let elem = gift.cloneNode();
   elem.dataset.point = point;
@@ -41,14 +39,14 @@ const addGift = (point) => {
   return elem;
 };
 
-const setBill = (list, totalPoint) => {
-  // let allPoints = [1000, 1000, 1000, 1000, 1000, 1000, 1000,
-  //                 1000, 1000, 1000, 800, 600, 400, 200, 800,
-  //                 600, 400, 200, 800, 600, 400, 200, 800,
-  //                 600, 400, 200, 800, 600, 400, 200];
+/**
+ * 亂數分配點數
+ * {array} list 發放面額陣列
+ * {number} totalPoint 預計發放點數總額
+ */
+const pointListGenerator = (list, totalPoint) => {
   let allPoints = [];
   let newPoint = 0;
-  // let maxNumber = list.reduce(function(a, b) { return Math.max(a, b)});
 
   do {
     newPoint = list[randomRound(0, list.length-1)] || 0;
@@ -68,10 +66,10 @@ const setBill = (list, totalPoint) => {
 
 const start = () => {
   timeLine.clear();
-  pointList = shuffle(setBill(pointBillList, MaxPoint));
+  pointList = shuffle(pointListGenerator(pointBillList, MaxPoint));
   
-  console.log(pointList.reduce(reducer));
-  console.log(pointList);
+  // console.log(pointList.reduce(reducer));
+  // console.log(pointList);
   
   pointList.forEach((v, i) => {
     addGift(v);
@@ -79,9 +77,6 @@ const start = () => {
 }
 
 /** timeline callback */
-const updateStats = () => { console.log('updateStats'); }
-const updateReps = () => { console.log('updateReps'); }
-const restart = () => { console.log('restart'); }
 const onComplete = (elem) => { console.log('onComplete');console.log(elem); }
 
 /** helpers */
@@ -91,11 +86,10 @@ const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = 
 const reducer = (accumulator, currentValue) => (accumulator + currentValue);
 
 /**
- * events
+ * Listener
  */
 
-start();
-
+/** 重啟按鈕 */
 resetBtn.addEventListener('click', () => {
   console.log('click to reset');
   while (gameBox.firstChild) {
@@ -104,5 +98,11 @@ resetBtn.addEventListener('click', () => {
   start();
   // gameBox
 });
+
+/**
+ * events
+ */
+
+start();
 
 
