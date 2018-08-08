@@ -9,14 +9,21 @@
   <!-- <script src="./node_modules/gsap/src/minified/TweenMax.min.js"></script>
   <script src="./node_modules/gsap/src/minified/easing/EasePack.min.js"></script> -->
   <script src="./javascripts/app.min.js" defer></script>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 </head>
 <body>
-  <div id="gameBox"></div>
+  <div id="gameBox">
+    <div class="catcher"></div>
+  </div>
   <div class="elements hide">
     <div class="gift"></div>
+    <div class="catcher"></div>
   </div>
   <div class="control">
-    <button type="reset" id="reset">reset</button>
+    <button type="button" id="startBtn">start</button>
+    <button type="button" id="pauseBtn" disabled>pause</button>
+    <button type="reset" id="resetBtn" disabled>reset</button>
   </div>
+  <div id="orientation"></div>
 </body>
 </html>

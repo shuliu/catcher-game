@@ -27,7 +27,8 @@ body {
 }
 
 #gameBox {
-  width: 500px;
+  min-width: 300px;
+  width: 100%;
   height: 500px;
   margin: auto;
   background: #666;
@@ -41,6 +42,21 @@ body {
   background: red;
   border-radius: 15px;
   position: absolute;
+}
+
+#gameBox .catcher {
+  width: 60px;
+  height: 20px;
+  background: blue;
+}
+
+#orientation {
+  min-width: 300px;
+  width: 100%;
+  height: 40px;
+  background: #DDD;
+  color: #333;
+  margin: auto;
 }
 
 .hide {

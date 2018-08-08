@@ -1,12 +1,18 @@
 /*eslint no-unused-vars: 0*/
 /*eslint ignore: TimelineMax*/
 
+(function(window){
+
 /**
  * variables
  */
 const gameBox       = document.querySelector('#gameBox');
+const orientation   = document.querySelector('#orientation');
 const gift          = document.querySelector('.elements .gift');
-const resetBtn      = document.querySelector('#reset');
+const catcher       = document.querySelector('#gameBox .catcher');
+const startBtn      = document.querySelector('#startBtn');
+const pauseBtn      = document.querySelector('#pauseBtn');
+const resetBtn      = document.querySelector('#resetBtn');
 const MaxPoint      = 20000;
 const pointBillList = [1000, 800, 600, 400, 200];
 let   pointList     = [];
@@ -32,7 +38,7 @@ const addGift = (point) => {
   let time = random(2, 4);
   let delay = random(0, gameTime-5);
   timeLine.fromTo(elem, time, {x: randX}, {
-    y: '+=500',
+    y: '+=' + max,
     ease: Power0.easeNone,
     onComplete: () => { elem.remove(); },
   }, delay)
@@ -64,6 +70,35 @@ const pointListGenerator = (list, totalPoint) => {
   return allPoints;
 };
 
+const onChangeOrientation = (event) => {
+  var alpha = event.alpha,
+    beta = event.beta,
+    gamma = event.gamma;
+
+  // a.innerHTML = Math.round(alpha);
+  // b.innerHTML = Math.round(beta);
+  // g.innerHTML = Math.round(gamma);
+  var moveData = {
+    alpha: Math.round(alpha),
+    beta: Math.round(beta),
+    gamma: Math.round(gamma)
+  };
+  orientation.innerHTML = JSON.stringify(moveData);
+  console.log(moveData);
+}
+
+const move = () => {
+  if (window.DeviceOrientationEvent) {
+    console.log('in move');
+    orientation.innerHTML = 'in Move';
+    window.addEventListener('deviceorientation', onChangeOrientation, false);
+  } else {
+    // return false;
+    console.log('not support orientation');
+    orientation.innerHTML = 'not support orientation';
+  }
+}
+
 const start = () => {
   timeLine.clear();
   pointList = shuffle(pointListGenerator(pointBillList, MaxPoint));
@@ -74,6 +109,15 @@ const start = () => {
   pointList.forEach((v, i) => {
     addGift(v);
   });
+
+  timeLine.play(0);
+};
+
+const cleanItems = (cb) => {
+  while (gameBox.firstChild) {
+    gameBox.removeChild(gameBox.firstChild);
+  }
+  if(typeof cb === 'function') cb();
 }
 
 /** timeline callback */
@@ -89,20 +133,40 @@ const reducer = (accumulator, currentValue) => (accumulator + currentValue);
  * Listener
  */
 
+/** 開始按鈕 */
+startBtn.addEventListener('click', () => {
+  if( timeLine._time >= timeLine.endTime() || timeLine._time === 0 ) {
+    console.log(timeLine._time, timeLine.endTime());
+    console.log('click to start');
+    cleanItems(start);
+  } else {
+    timeLine.play();
+  }
+  startBtn.disabled = true;
+  pauseBtn.disabled = false;
+  resetBtn.disabled = false;
+});
+
+/** 暫停 */
+pauseBtn.addEventListener('click', () => {
+  timeLine.paused(true);
+  startBtn.disabled = false;
+  pauseBtn.disabled = true;
+})
+
 /** 重啟按鈕 */
 resetBtn.addEventListener('click', () => {
   console.log('click to reset');
-  while (gameBox.firstChild) {
-    gameBox.removeChild(gameBox.firstChild);
-  }
-  start();
-  // gameBox
+  cleanItems(start);
+  startBtn.disabled = true;
+  pauseBtn.disabled = false;
 });
 
 /**
  * events
  */
 
-start();
+move();
 
 
+})(window);
