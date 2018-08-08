@@ -151,7 +151,6 @@ const reducer = (accumulator, currentValue) => (accumulator + currentValue);
 /** events method */
 const startEvent = () => {
   if( timeLine._time >= timeLine.endTime() || timeLine._time === 0 ) {
-    console.log(timeLine._time, timeLine.endTime());
     console.log('click to start');
     cleanItems(start);
   } else {
@@ -197,6 +196,6 @@ resetBtn.addEventListener('touchend', resetEvent);
 
 startBtn.disabled = false;
 move();
-
+TweenMax.set(catcher, {x: (gameBox.offsetWidth / 2 - catcher.offsetWidth / 2)})
 
 })(window);

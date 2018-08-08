@@ -48,9 +48,10 @@ body {
 }
 
 #gameBox .catcher {
-  width: 60px;
+  width: 16%;
   height: 20px;
-  background: blue;
+  display: inline-block;
+  background: lightblue;
 }
 
 #orientation {
