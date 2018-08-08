@@ -21,10 +21,12 @@ body {
 
 .control {
   min-width: 100px;
-  min-height: 100px;
-  position: fixed;
-  left: 1em;
-  top: 10em;
+  padding: 4px;
+  margin: auto;
+  text-align: center;
+  button {
+    margin: 0 8px;
+  }
 }
 
 #gameBox {
@@ -66,3 +68,17 @@ body {
 .hide {
   display: none;
 }
+
+button {
+  border: 1px solid #DDD;
+  border-radius: 15px;
+  padding: 2px 12px;
+
+  &:disabled {
+    color: #CCC;
+    background: #666;
+  }
+}
+
+
+

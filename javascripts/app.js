@@ -195,6 +195,7 @@ resetBtn.addEventListener('touchend', resetEvent);
  * events
  */
 
+startBtn.disabled = false;
 move();
 
 
