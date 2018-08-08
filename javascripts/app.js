@@ -3,6 +3,23 @@
 
 (function(window){
 
+/** timeline callback */
+const timeLineOnStart = () => {
+  console.log('timeLineOnStart');
+  startBtn.disabled = true;
+  pauseBtn.disabled = false;
+  resetBtn.disabled = false;
+};
+
+const timeLineOnComplete = () => {
+  console.log('timeLineOnComplete');
+  startBtn.disabled = false;
+  pauseBtn.disabled = true;
+  resetBtn.disabled = true;
+};
+
+const onComplete = (elem) => { console.log('onComplete');console.log(elem); };
+
 /**
  * variables
  */
@@ -18,7 +35,12 @@ const pointBillList = [1000, 800, 600, 400, 200];
 let   pointList     = [];
 const moveWidth     = 40; // 物件含左右搖版寬度
 const gameTime      = 60; // 遊戲時間
-let   timeLine      = new TimelineMax({delay:0.5});
+let   gameStatus    = 'stop'; // 遊戲狀態
+let   timeLine      = new TimelineMax({
+  delay:0.5,
+  onStart: timeLineOnStart,
+  onComplete: timeLineOnComplete
+});
 
 /**
  * methods
@@ -120,21 +142,14 @@ const cleanItems = (cb) => {
   if(typeof cb === 'function') cb();
 }
 
-/** timeline callback */
-const onComplete = (elem) => { console.log('onComplete');console.log(elem); }
-
 /** helpers */
 const randomRound = (min, max) => (Math.round(Math.random() * (max - min) + min));
 const random = (min, max) => (Math.random() * (max - min) + min);
 const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
 const reducer = (accumulator, currentValue) => (accumulator + currentValue);
 
-/**
- * Listener
- */
-
-/** 開始按鈕 */
-startBtn.addEventListener('click', () => {
+/** events method */
+const startEvent = () => {
   if( timeLine._time >= timeLine.endTime() || timeLine._time === 0 ) {
     console.log(timeLine._time, timeLine.endTime());
     console.log('click to start');
@@ -145,22 +160,36 @@ startBtn.addEventListener('click', () => {
   startBtn.disabled = true;
   pauseBtn.disabled = false;
   resetBtn.disabled = false;
-});
+};
 
-/** 暫停 */
-pauseBtn.addEventListener('click', () => {
+const pauseEvent = () => {
   timeLine.paused(true);
   startBtn.disabled = false;
   pauseBtn.disabled = true;
-})
+};
 
-/** 重啟按鈕 */
-resetBtn.addEventListener('click', () => {
+const resetEvent = () => {
   console.log('click to reset');
   cleanItems(start);
   startBtn.disabled = true;
   pauseBtn.disabled = false;
-});
+};
+
+/**
+ * Listener
+ */
+
+/** 開始按鈕 */
+startBtn.addEventListener('click', startEvent);
+startBtn.addEventListener('touchend', startEvent);
+
+/** 暫停 */
+pauseBtn.addEventListener('click', pauseEvent);
+pauseBtn.addEventListener('touchend', pauseEvent);
+
+/** 重啟按鈕 */
+resetBtn.addEventListener('click', resetEvent);
+resetBtn.addEventListener('touchend', resetEvent);
 
 /**
  * events
