@@ -1,7 +1,7 @@
 /*eslint no-unused-vars: 0*/
 /*eslint ignore: TimelineMax*/
 
-(function(window){
+// (function(window){
 
 /** timeline callback */
 const timeLineOnStart = () => {
@@ -19,6 +19,14 @@ const timeLineOnComplete = () => {
 };
 
 const onComplete = (elem) => { console.log('onComplete');console.log(elem); };
+const checkHit = (elem) => {
+  // console.log(elem);
+  if( Draggable.hitTest(catcher, elem) ) {
+    // TweenMax.killTweensOf(elem);
+    TweenMax.to(elem, 0.5, {backgroundColor: 'green'});
+    // console.log(elem);
+  }
+};
 
 /**
  * variables
@@ -59,11 +67,13 @@ const addGift = (point) => {
   let toYMax = gameBox.offsetHeight + moveWidth;
   let time = random(2, 4);
   let delay = random(0, gameTime-5);
-  timeLine.fromTo(elem, time, {x: randX}, {
+  console.log({x: randX, y: 0})
+  timeLine.fromTo(elem, time, {x: randX, y: 0}, {
     y: '+=' + max,
     ease: Power0.easeNone,
     onComplete: () => { elem.remove(); },
-  }, delay)
+    onUpdate: () => { checkHit(elem); }
+  }, delay);
   return elem;
 };
 
@@ -136,10 +146,33 @@ const start = () => {
 };
 
 const cleanItems = (cb) => {
-  while (gameBox.firstChild) {
-    gameBox.removeChild(gameBox.firstChild);
-  }
+
+    gameBox.querySelectorAll('.gift').forEach((v, i) => {
+      gameBox.removeChild(v);
+    });
+    
   if(typeof cb === 'function') cb();
+}
+
+const keyDownEvent = (event) => {
+  if(event.keyCode && event.which === 39) {
+    // ->
+    TweenMax.to(catcher, 0.2, {x: '+=' + gameBox.offsetWidth/30})
+  }
+
+  if(event.keyCode && event.which === 37) {
+    // <-
+    TweenMax.to(catcher, 0.2, {x: '-=' + gameBox.offsetWidth/30})
+  }
+  console.log(event);
+};
+const addkeyDownEvent = () => {
+  console.log('addkeyDownEvent')
+  document.addEventListener('keydown', keyDownEvent);
+}
+const removekeyDownEvent = () => {
+  console.log(removekeyDownEvent)
+  document.removeEventListener('keydown', keyDownEvent);
 }
 
 /** helpers */
@@ -159,12 +192,14 @@ const startEvent = () => {
   startBtn.disabled = true;
   pauseBtn.disabled = false;
   resetBtn.disabled = false;
+  addkeyDownEvent();
 };
 
 const pauseEvent = () => {
   timeLine.paused(true);
   startBtn.disabled = false;
   pauseBtn.disabled = true;
+  removekeyDownEvent();
 };
 
 const resetEvent = () => {
@@ -172,6 +207,8 @@ const resetEvent = () => {
   cleanItems(start);
   startBtn.disabled = true;
   pauseBtn.disabled = false;
+  removekeyDownEvent();
+  addkeyDownEvent()
 };
 
 /**
@@ -196,6 +233,9 @@ resetBtn.addEventListener('touchend', resetEvent);
 
 startBtn.disabled = false;
 move();
-TweenMax.set(catcher, {x: (gameBox.offsetWidth / 2 - catcher.offsetWidth / 2)})
+TweenMax.set(catcher, {
+  x: (gameBox.offsetWidth / 2 - catcher.offsetWidth / 2),
+  y: (gameBox.offsetHeight - catcher.offsetHeight) - 200
+})
 
-})(window);
+// })(window);
