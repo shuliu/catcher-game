@@ -8,13 +8,16 @@ const timeLineOnStart = () => {
   console.log('timeLineOnStart');
   startBtn.disabled = true;
   pauseBtn.disabled = false;
+  stopBtn.disabled = true;
   resetBtn.disabled = false;
 };
 
 const timeLineOnComplete = () => {
   console.log('timeLineOnComplete');
+  cleanItems();
   startBtn.disabled = false;
   pauseBtn.disabled = true;
+  stopBtn.disabled = true;
   resetBtn.disabled = true;
 };
 
@@ -37,6 +40,7 @@ const gift          = document.querySelector('.elements .gift');
 const catcher       = document.querySelector('#gameBox .catcher');
 const startBtn      = document.querySelector('#startBtn');
 const pauseBtn      = document.querySelector('#pauseBtn');
+const stopBtn       = document.querySelector('#stopBtn');
 const resetBtn      = document.querySelector('#resetBtn');
 const MaxPoint      = 20000;
 const pointBillList = [1000, 800, 600, 400, 200];
@@ -44,6 +48,7 @@ let   pointList     = [];
 const moveWidth     = 40; // 物件含左右搖版寬度
 const gameTime      = 60; // 遊戲時間
 let   gameStatus    = 'stop'; // 遊戲狀態
+const moveRange     = 14; // catcher 左右可移動次數
 let   timeLine      = new TimelineMax({
   delay:0.5,
   onStart: timeLineOnStart,
@@ -62,7 +67,7 @@ const addGift = (point) => {
   let elem = gift.cloneNode();
   elem.dataset.point = point;
   gameBox.append(elem);
-  let max = gameBox.offsetWidth - moveWidth;
+  let max = gameBox.offsetHeight - moveWidth;
   let randX = random(moveWidth, max);
   let toYMax = gameBox.offsetHeight + moveWidth;
   let time = random(2, 4);
@@ -107,9 +112,6 @@ const onChangeOrientation = (event) => {
     beta = event.beta,
     gamma = event.gamma;
 
-  // a.innerHTML = Math.round(alpha);
-  // b.innerHTML = Math.round(beta);
-  // g.innerHTML = Math.round(gamma);
   var moveData = {
     alpha: Math.round(alpha),
     beta: Math.round(beta),
@@ -133,6 +135,9 @@ const move = () => {
 
 const start = () => {
   timeLine.clear();
+
+  setCatcherToReady();
+
   pointList = shuffle(pointListGenerator(pointBillList, MaxPoint));
   
   // console.log(pointList.reduce(reducer));
@@ -154,24 +159,35 @@ const cleanItems = (cb) => {
   if(typeof cb === 'function') cb();
 }
 
+/** 設定 catcher 起始位置 */
+const setCatcherToReady = () => {
+  catcher.dataset.move = 0;
+  TweenMax.set(catcher, {
+    x: (gameBox.offsetWidth / 2 - catcher.offsetWidth / 2),
+    y: (gameBox.offsetHeight - catcher.offsetHeight) - 40
+  });
+};
+
 const keyDownEvent = (event) => {
-  if(event.keyCode && event.which === 39) {
+  let moveStatus = parseInt(catcher.dataset.move, 10);
+  if(event.keyCode && event.which === 39 && moveStatus < moveRange/2 - 1) {
     // ->
-    TweenMax.to(catcher, 0.2, {x: '+=' + gameBox.offsetWidth/30})
+    catcher.dataset.move = moveStatus + 1;
+    TweenMax.to(catcher, 0.2, {x: '+=' + gameBox.offsetWidth/moveRange})
   }
 
-  if(event.keyCode && event.which === 37) {
+  if(event.keyCode && event.which === 37 && moveStatus > -(moveRange/2 - 1)) {
     // <-
-    TweenMax.to(catcher, 0.2, {x: '-=' + gameBox.offsetWidth/30})
+    catcher.dataset.move = moveStatus - 1;
+    TweenMax.to(catcher, 0.2, {x: '-=' + gameBox.offsetWidth/moveRange})
   }
-  console.log(event);
 };
 const addkeyDownEvent = () => {
   console.log('addkeyDownEvent')
   document.addEventListener('keydown', keyDownEvent);
 }
 const removekeyDownEvent = () => {
-  console.log(removekeyDownEvent)
+  console.log('removekeyDownEvent')
   document.removeEventListener('keydown', keyDownEvent);
 }
 
@@ -191,6 +207,7 @@ const startEvent = () => {
   }
   startBtn.disabled = true;
   pauseBtn.disabled = false;
+  stopBtn.disabled = false;
   resetBtn.disabled = false;
   addkeyDownEvent();
 };
@@ -199,6 +216,17 @@ const pauseEvent = () => {
   timeLine.paused(true);
   startBtn.disabled = false;
   pauseBtn.disabled = true;
+  resetBtn.disabled = false;
+  removekeyDownEvent();
+};
+
+const stopEvent = () => {
+  timeLine.stop(true);
+  cleanItems();
+  startBtn.disabled = false;
+  pauseBtn.disabled = true;
+  stopBtn.disabled = true;
+  resetBtn.disabled = true;
   removekeyDownEvent();
 };
 
@@ -206,6 +234,8 @@ const resetEvent = () => {
   console.log('click to reset');
   cleanItems(start);
   startBtn.disabled = true;
+  pauseBtn.disabled = true;
+  stopBtn.disabled = true;
   pauseBtn.disabled = false;
   removekeyDownEvent();
   addkeyDownEvent()
@@ -223,6 +253,10 @@ startBtn.addEventListener('touchend', startEvent);
 pauseBtn.addEventListener('click', pauseEvent);
 pauseBtn.addEventListener('touchend', pauseEvent);
 
+/** 暫停 */
+stopBtn.addEventListener('click', stopEvent);
+stopBtn.addEventListener('touchend', stopEvent);
+
 /** 重啟按鈕 */
 resetBtn.addEventListener('click', resetEvent);
 resetBtn.addEventListener('touchend', resetEvent);
@@ -233,9 +267,7 @@ resetBtn.addEventListener('touchend', resetEvent);
 
 startBtn.disabled = false;
 move();
-TweenMax.set(catcher, {
-  x: (gameBox.offsetWidth / 2 - catcher.offsetWidth / 2),
-  y: (gameBox.offsetHeight - catcher.offsetHeight) - 200
-})
+console.log('[HMR reload test]: load');
+
 
 // })(window);
