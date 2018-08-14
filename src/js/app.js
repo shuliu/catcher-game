@@ -1,7 +1,32 @@
 /*eslint no-unused-vars: 0*/
 /*eslint ignore: TimelineMax*/
 
+import TweenMax from 'gsap/TweenMax';
+import TimelineMax from 'gsap/TimelineMax';
+import EasePack from 'gsap';
+import Draggable from "gsap/Draggable";
+
 // (function(window){
+
+
+let StateMachine = require('javascript-state-machine');
+
+
+let fsm = new StateMachine({
+  init: 'solid',
+  transitions: [
+    { name: 'melt',     from: 'solid',  to: 'liquid' },
+    { name: 'freeze',   from: 'liquid', to: 'solid'  },
+    { name: 'vaporize', from: 'liquid', to: 'gas'    },
+    { name: 'condense', from: 'gas',    to: 'liquid' }
+  ],
+  methods: {
+    onMelt:     function() { console.log('I melted')    },
+    onFreeze:   function() { console.log('I froze')     },
+    onVaporize: function() { console.log('I vaporized') },
+    onCondense: function() { console.log('I condensed') }
+  }
+});;
 
 /** timeline callback */
 const timeLineOnStart = () => {
@@ -26,7 +51,7 @@ const checkHit = (elem) => {
   // console.log(elem);
   if( Draggable.hitTest(catcher, elem) ) {
     // TweenMax.killTweensOf(elem);
-    TweenMax.to(elem, 0.5, {backgroundColor: 'green'});
+    TweenMax.to(elem, 0.5, {backgroundColor: 'yellow'});
     // console.log(elem);
   }
 };
@@ -67,9 +92,9 @@ const addGift = (point) => {
   let elem = gift.cloneNode();
   elem.dataset.point = point;
   gameBox.append(elem);
-  let max = gameBox.offsetHeight - moveWidth;
+  let max = gameBox.clientWidth - moveWidth;
   let randX = random(moveWidth, max);
-  let toYMax = gameBox.offsetHeight + moveWidth;
+  let toYMax = gameBox.clientWidth + moveWidth;
   let time = random(2, 4);
   let delay = random(0, gameTime-5);
   console.log({x: randX, y: 0})
@@ -163,23 +188,23 @@ const cleanItems = (cb) => {
 const setCatcherToReady = () => {
   catcher.dataset.move = 0;
   TweenMax.set(catcher, {
-    x: (gameBox.offsetWidth / 2 - catcher.offsetWidth / 2),
-    y: (gameBox.offsetHeight - catcher.offsetHeight) - 40
+    x: (gameBox.clientWidth / 2 - catcher.clientWidth / 2),
+    y: (gameBox.clientHeight - catcher.clientHeight) - 40
   });
 };
 
 const keyDownEvent = (event) => {
   let moveStatus = parseInt(catcher.dataset.move, 10);
-  if(event.keyCode && event.which === 39 && moveStatus < moveRange/2 - 1) {
+  if(event.keyCode && event.which === 39 && moveStatus < moveRange/2) {
     // ->
     catcher.dataset.move = moveStatus + 1;
-    TweenMax.to(catcher, 0.2, {x: '+=' + gameBox.offsetWidth/moveRange})
+    TweenMax.to(catcher, 0.2, {x: '+=' + gameBox.clientWidth/moveRange})
   }
 
-  if(event.keyCode && event.which === 37 && moveStatus > -(moveRange/2 - 1)) {
+  if(event.keyCode && event.which === 37 && moveStatus > -(moveRange/2)) {
     // <-
     catcher.dataset.move = moveStatus - 1;
-    TweenMax.to(catcher, 0.2, {x: '-=' + gameBox.offsetWidth/moveRange})
+    TweenMax.to(catcher, 0.2, {x: '-=' + gameBox.clientWidth/moveRange})
   }
 };
 const addkeyDownEvent = () => {
