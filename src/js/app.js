@@ -11,7 +11,8 @@ import Draggable from "gsap/Draggable";
 
 let StateMachine = require('javascript-state-machine');
 
-
+// 狀態機
+// @linl http://www.ruanyifeng.com/blog/2013/09/finite-state_machine_for_javascript.html
 let fsm = new StateMachine({
   init: 'solid',
   transitions: [
@@ -40,6 +41,7 @@ const timeLineOnStart = () => {
 const timeLineOnComplete = () => {
   console.log('timeLineOnComplete');
   cleanItems();
+  removekeyDownEvent();
   startBtn.disabled = false;
   pauseBtn.disabled = true;
   stopBtn.disabled = true;
@@ -186,7 +188,6 @@ const cleanItems = (cb) => {
 
 /** 設定 catcher 起始位置 */
 const setCatcherToReady = () => {
-  catcher.dataset.move = 0;
   TweenMax.set(catcher, {
     x: (gameBox.clientWidth / 2 - catcher.clientWidth / 2),
     y: (gameBox.clientHeight - catcher.clientHeight) - 40
@@ -194,18 +195,23 @@ const setCatcherToReady = () => {
 };
 
 const keyDownEvent = (event) => {
-  let moveStatus = parseInt(catcher.dataset.move, 10);
-  if(event.keyCode && event.which === 39 && moveStatus < moveRange/2) {
+  let maxRange = gameBox.clientWidth - catcher.clientWidth; // 最大移動寬距
+  let minRange = 0; // 最小移動寬距
+  let moveX = 0;
+  let moveXWidth = 80;
+  let time = 0.3;
+
+  if(event.keyCode && event.which === 39) {
     // ->
-    catcher.dataset.move = moveStatus + 1;
-    TweenMax.to(catcher, 0.2, {x: '+=' + gameBox.clientWidth/moveRange})
+    moveX = (catcher._gsTransform.x + moveXWidth) > maxRange ? maxRange : catcher._gsTransform.x + moveXWidth;
   }
 
-  if(event.keyCode && event.which === 37 && moveStatus > -(moveRange/2)) {
+  if(event.keyCode && event.which === 37) {
     // <-
-    catcher.dataset.move = moveStatus - 1;
-    TweenMax.to(catcher, 0.2, {x: '-=' + gameBox.clientWidth/moveRange})
+    moveX = (catcher._gsTransform.x - moveXWidth) < minRange ? minRange : catcher._gsTransform.x - moveXWidth;
   }
+  // console.log({rangX: minRange, on: moveX});
+  TweenMax.to(catcher, time, {x: moveX});
 };
 const addkeyDownEvent = () => {
   console.log('addkeyDownEvent')
@@ -292,7 +298,18 @@ resetBtn.addEventListener('touchend', resetEvent);
 
 startBtn.disabled = false;
 move();
-console.log('[HMR reload test]: load');
+
+
+/**
+ * test code
+ */
+
+// catcher.addEventListener('click', () => {
+//   setCatcherToReady();
+//   addkeyDownEvent();
+//   let body = document.body;
+//   Draggable.create(catcher, { type:"x", bounds: gameBox});
+// });
 
 
 // })(window);
