@@ -14,7 +14,7 @@ let config = {
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].min.js',
+    filename: '[name]-[hash].min.js',
     // publicPath: '/dist'
   },
   module: {

@@ -52,8 +52,11 @@ const onComplete = (elem) => { console.log('onComplete');console.log(elem); };
 const checkHit = (elem) => {
   // console.log(elem);
   if( Draggable.hitTest(catcher, elem) ) {
-    // TweenMax.killTweensOf(elem);
-    TweenMax.to(elem, 0.5, {backgroundColor: 'yellow'});
+    score += parseInt(elem.dataset.point, 10);
+    scoreBox.textContent = score.toString();
+    TweenMax.killTweensOf(elem);
+    elem.remove();
+    // TweenMax.to(elem, 0.5, {backgroundColor: 'yellow'});
     // console.log(elem);
   }
 };
@@ -65,17 +68,20 @@ const gameBox       = document.querySelector('#gameBox');
 const orientation   = document.querySelector('#orientation');
 const gift          = document.querySelector('.elements .gift');
 const catcher       = document.querySelector('#gameBox .catcher');
+const scoreBox      = document.querySelector('#score');
 const startBtn      = document.querySelector('#startBtn');
 const pauseBtn      = document.querySelector('#pauseBtn');
 const stopBtn       = document.querySelector('#stopBtn');
 const resetBtn      = document.querySelector('#resetBtn');
 const MaxPoint      = 20000;
 const pointBillList = [1000, 800, 600, 400, 200];
+let   score         = 0;
 let   pointList     = [];
 const moveWidth     = 40; // 物件含左右搖版寬度
 const gameTime      = 60; // 遊戲時間
 let   gameStatus    = 'stop'; // 遊戲狀態
-const moveRange     = 14; // catcher 左右可移動次數
+const moveXWidth    = 80; // 移動距離
+const moveXMobile   = 20; // 移動距離 (mobile device orientation)
 let   timeLine      = new TimelineMax({
   delay:0.5,
   onStart: timeLineOnStart,
@@ -144,11 +150,17 @@ const onChangeOrientation = (event) => {
     beta: Math.round(beta),
     gamma: Math.round(gamma)
   };
+  if(moveData.gamma > 0) {
+    moveCatcherBox(moveXMobile);
+  } else if(moveData.gamma < 0) {
+    moveCatcherBox(-moveXMobile);
+  }
+
   orientation.innerHTML = JSON.stringify(moveData);
   console.log(moveData);
 }
 
-const move = () => {
+const mobileMove = () => {
   if (window.DeviceOrientationEvent) {
     console.log('in move');
     orientation.innerHTML = 'in Move';
@@ -160,8 +172,16 @@ const move = () => {
   }
 }
 
+const mobileStopMove = () => {
+  if (window.DeviceOrientationEvent) {
+    window.removeEventListener('deviceorientation', onChangeOrientation, false);
+  }
+};
+
 const start = () => {
   timeLine.clear();
+  score = 0;
+  scoreBox.textContent = score.toString();
 
   setCatcherToReady();
 
@@ -195,24 +215,45 @@ const setCatcherToReady = () => {
 };
 
 const keyDownEvent = (event) => {
-  let maxRange = gameBox.clientWidth - catcher.clientWidth; // 最大移動寬距
-  let minRange = 0; // 最小移動寬距
-  let moveX = 0;
-  let moveXWidth = 80;
-  let time = 0.3;
-
   if(event.keyCode && event.which === 39) {
     // ->
-    moveX = (catcher._gsTransform.x + moveXWidth) > maxRange ? maxRange : catcher._gsTransform.x + moveXWidth;
+    moveCatcherBox(moveXWidth);
+    
   }
 
   if(event.keyCode && event.which === 37) {
     // <-
-    moveX = (catcher._gsTransform.x - moveXWidth) < minRange ? minRange : catcher._gsTransform.x - moveXWidth;
+    moveCatcherBox(-moveXWidth);
   }
+
+};
+
+/**
+ * 移動方向
+ * movement {number} +- number
+ */
+const moveCatcherBox = (movement) => {
+  if(movement === 0) {
+    return false;
+  }
+  let maxRange = gameBox.clientWidth - catcher.clientWidth; // 最大移動寬距
+  let minRange = 0; // 最小移動寬距
+  let moveX = 0;
+  let time = 0.3;
+
+  if(movement > 0) {
+    // ->
+    moveX = (catcher._gsTransform.x + movement) > maxRange ? maxRange : catcher._gsTransform.x + movement;
+  }
+  if(movement < 0) {
+    // <-
+    moveX = (catcher._gsTransform.x + movement) < minRange ? minRange : catcher._gsTransform.x + movement;
+  }
+
   // console.log({rangX: minRange, on: moveX});
   TweenMax.to(catcher, time, {x: moveX});
 };
+
 const addkeyDownEvent = () => {
   console.log('addkeyDownEvent')
   document.addEventListener('keydown', keyDownEvent);
@@ -241,6 +282,7 @@ const startEvent = () => {
   stopBtn.disabled = false;
   resetBtn.disabled = false;
   addkeyDownEvent();
+  mobileMove();
 };
 
 const pauseEvent = () => {
@@ -249,16 +291,19 @@ const pauseEvent = () => {
   pauseBtn.disabled = true;
   resetBtn.disabled = false;
   removekeyDownEvent();
+  mobileStopMove();
 };
 
 const stopEvent = () => {
   timeLine.stop(true);
   cleanItems();
+  score = 0;
   startBtn.disabled = false;
   pauseBtn.disabled = true;
   stopBtn.disabled = true;
   resetBtn.disabled = true;
   removekeyDownEvent();
+  mobileStopMove();
 };
 
 const resetEvent = () => {
@@ -269,7 +314,9 @@ const resetEvent = () => {
   stopBtn.disabled = true;
   pauseBtn.disabled = false;
   removekeyDownEvent();
-  addkeyDownEvent()
+  addkeyDownEvent();
+  mobileStopMove();
+  mobileMove();
 };
 
 /**
@@ -297,8 +344,6 @@ resetBtn.addEventListener('touchend', resetEvent);
  */
 
 startBtn.disabled = false;
-move();
-
 
 /**
  * test code
