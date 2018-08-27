@@ -42,6 +42,7 @@ const timeLineOnComplete = () => {
   console.log('timeLineOnComplete');
   cleanItems();
   removekeyDownEvent();
+  mobileStopMove();
   startBtn.disabled = false;
   pauseBtn.disabled = true;
   stopBtn.disabled = true;
@@ -80,6 +81,7 @@ let   pointList     = [];
 const moveWidth     = 40; // 物件含左右搖版寬度
 const gameTime      = 60; // 遊戲時間
 let   gameStatus    = 'stop'; // 遊戲狀態
+const gammaRange    = 5 // 水平儀 gamma 感應角度範圍 (超過才觸發移動)
 const moveXWidth    = 80; // 移動距離
 const moveXMobile   = 20; // 移動距離 (mobile device orientation)
 let   timeLine      = new TimelineMax({
@@ -105,7 +107,7 @@ const addGift = (point) => {
   let toYMax = gameBox.clientWidth + moveWidth;
   let time = random(2, 4);
   let delay = random(0, gameTime-5);
-  console.log({x: randX, y: 0})
+  // console.log({x: randX, y: 0})
   timeLine.fromTo(elem, time, {x: randX, y: 0}, {
     y: '+=' + max,
     ease: Power0.easeNone,
@@ -150,9 +152,9 @@ const onChangeOrientation = (event) => {
     beta: Math.round(beta),
     gamma: Math.round(gamma)
   };
-  if(moveData.gamma > 0) {
+  if(moveData.gamma > gammaRange) {
     moveCatcherBox(moveXMobile);
-  } else if(moveData.gamma < 0) {
+  } else if(moveData.gamma < gammaRange) {
     moveCatcherBox(-moveXMobile);
   }
 
@@ -162,8 +164,8 @@ const onChangeOrientation = (event) => {
 
 const mobileMove = () => {
   if (window.DeviceOrientationEvent) {
-    console.log('in move');
-    orientation.innerHTML = 'in Move';
+    // console.log('in move');
+    // orientation.innerHTML = 'in Move';
     window.addEventListener('deviceorientation', onChangeOrientation, false);
   } else {
     // return false;
