@@ -8,27 +8,6 @@ import Draggable from "gsap/Draggable";
 
 // (function(window){
 
-
-let StateMachine = require('javascript-state-machine');
-
-// 狀態機
-// @linl http://www.ruanyifeng.com/blog/2013/09/finite-state_machine_for_javascript.html
-let fsm = new StateMachine({
-  init: 'solid',
-  transitions: [
-    { name: 'melt',     from: 'solid',  to: 'liquid' },
-    { name: 'freeze',   from: 'liquid', to: 'solid'  },
-    { name: 'vaporize', from: 'liquid', to: 'gas'    },
-    { name: 'condense', from: 'gas',    to: 'liquid' }
-  ],
-  methods: {
-    onMelt:     function() { console.log('I melted')    },
-    onFreeze:   function() { console.log('I froze')     },
-    onVaporize: function() { console.log('I vaporized') },
-    onCondense: function() { console.log('I condensed') }
-  }
-});;
-
 /** timeline callback */
 const timeLineOnStart = () => {
   console.log('timeLineOnStart');
@@ -39,56 +18,97 @@ const timeLineOnStart = () => {
 };
 
 const timeLineOnComplete = () => {
-  console.log('timeLineOnComplete');
-  cleanItems();
-  removekeyDownEvent();
-  mobileStopMove();
-  startBtn.disabled = false;
-  pauseBtn.disabled = true;
-  stopBtn.disabled = true;
-  resetBtn.disabled = true;
+  if(!endCallbackLock) {
+    console.log('timeLineOnComplete');
+    cleanItems();
+    removekeyDownEvent();
+    mobileStopMove();
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+    stopBtn.disabled = true;
+    resetBtn.disabled = true;
+
+    endToSendPoint();
+    endCallbackLock = true;
+  }
+  endCallbackLock = false;
+};
+
+// 遊戲結束並計算分數
+const endToSendPoint = () => {
+  console.log('==遊戲結束並計算分數==');
+  console.log({
+    '得點': score
+  });
 };
 
 const onComplete = (elem) => { console.log('onComplete');console.log(elem); };
 const checkHit = (elem) => {
   // console.log(elem);
   if( Draggable.hitTest(catcher, elem) ) {
-    score += parseInt(elem.dataset.point, 10);
-    scoreBox.textContent = score.toString();
-    TweenMax.killTweensOf(elem);
-    elem.remove();
-    // TweenMax.to(elem, 0.5, {backgroundColor: 'yellow'});
-    // console.log(elem);
+    // 碰撞到炸彈
+    if(elem.className.indexOf(bombKey) >= 0) {
+      // 遊戲停止開始算分
+      timeLine.paused(true);
+      removekeyDownEvent();
+      endToSendPoint();
+    }
+    // 碰撞到彩球
+    else if(elem.className.indexOf(hitKey) === -1) {
+      elem.classList.add(hitKey);
+      score += parseInt(elem.dataset.point, 10);
+      scoreBox.textContent = score.toString();
+      TweenMax.killTweensOf(elem);
+
+      let newBoomElem = boomElem.cloneNode();
+      TweenMax.fromTo(newBoomElem, 3, {
+        x: elem._gsTransform.x - (elem.offsetWidth/2),
+        y: elem._gsTransform.y - (elem.offsetWidth/2),
+      },{
+        autoAlpha: 0,
+      });
+      gameBox.append(newBoomElem);
+
+      elem.remove();
+    }
   }
 };
 
 /**
  * variables
  */
-const gameBox       = document.querySelector('#gameBox');
-const orientation   = document.querySelector('#orientation');
-const gift          = document.querySelector('.elements .gift');
-const catcher       = document.querySelector('#gameBox .catcher');
-const scoreBox      = document.querySelector('#score');
-const startBtn      = document.querySelector('#startBtn');
-const pauseBtn      = document.querySelector('#pauseBtn');
-const stopBtn       = document.querySelector('#stopBtn');
-const resetBtn      = document.querySelector('#resetBtn');
-const MaxPoint      = 20000;
-const pointBillList = [1000, 800, 600, 400, 200];
-let   score         = 0;
-let   pointList     = [];
-const moveWidth     = 40; // 物件含左右搖版寬度
-const gameTime      = 60; // 遊戲時間
-let   gameStatus    = 'stop'; // 遊戲狀態
-const gammaRange    = 5 // 水平儀 gamma 感應角度範圍 (超過才觸發移動)
-const moveXWidth    = 80; // 移動距離
-const moveXMobile   = 20; // 移動距離 (mobile device orientation)
-let   timeLine      = new TimelineMax({
+const gameBox         = document.querySelector('#gameBox');
+const orientation     = document.querySelector('#orientation');
+const gift            = document.querySelector('.elements .gift');
+const catcher         = document.querySelector('#gameBox .catcher');
+const scoreBox        = document.querySelector('#score');
+const startBtn        = document.querySelector('#startBtn');
+const pauseBtn        = document.querySelector('#pauseBtn');
+const stopBtn         = document.querySelector('#stopBtn');
+const resetBtn        = document.querySelector('#resetBtn');
+const MaxPoint        = 20000;
+const pointBillList   = [1000, 800, 600, 400, 200];
+let   score           = 0;
+let   pointList       = [];
+const bombKey         = 'bomb'; // 炸彈 class 名稱
+const hitKey          = 'hit'; // 碰撞 class 名稱
+const hitAnimateTime  = 3; // 碰撞後動畫運作時間 (秒)
+const moveWidth       = 40; // 物件含左右搖版寬度
+const gameTime        = 30; // 遊戲時間
+let   gameStatus      = 'stop'; // 遊戲狀態
+const gammaRange      = 5; // 水平儀 gamma 感應角度範圍 (超過才觸發移動)
+const moveXWidth      = 80; // 移動距離
+const moveXMobile     = 20; // 移動距離 (mobile device orientation)
+let   endCallbackLock = true; // timeline 結束 callback 的 lock
+let   timeLine        = new TimelineMax({
   delay:0.5,
   onStart: timeLineOnStart,
   onComplete: timeLineOnComplete
 });
+
+// 爆炸特效元素
+const boomElem = document.createElement('div');
+boomElem.classList.add('BoomAnimate');
 
 /**
  * methods
@@ -101,6 +121,9 @@ let   timeLine      = new TimelineMax({
 const addGift = (point) => {
   let elem = gift.cloneNode();
   elem.dataset.point = point;
+  if(point === bombKey) {
+    elem.classList.add(bombKey);
+  }
   gameBox.append(elem);
   let max = gameBox.clientWidth - moveWidth;
   let randX = random(moveWidth, max);
@@ -115,6 +138,15 @@ const addGift = (point) => {
     onUpdate: () => { checkHit(elem); }
   }, delay);
   return elem;
+};
+
+const addBomb = (length) => {
+  let time = 0;
+  const startTime = 5;
+  const endTime = gameTime - startTime;
+  for (let index = 0; index < length; index++) {
+    time = random(startTime, endTime);
+  }
 };
 
 /**
@@ -138,8 +170,22 @@ const pointListGenerator = (list, totalPoint) => {
     }
   }
   while (totalPoint > 0 );
-  
+
   return allPoints;
+};
+
+/**
+ * 取得炸彈總數 (點數彩球數量的 1/10)
+ * @param {array} pointList
+ * @returns {array}
+ */
+const bombList = (pointList) => {
+  let total = Math.floor(pointList.length/10);
+  let bombs = [];
+  for (let index = 0; index < total; index++) {
+    bombs.push(bombKey);
+  }
+  return bombs;
 };
 
 const onChangeOrientation = (event) => {
@@ -187,11 +233,12 @@ const start = () => {
 
   setCatcherToReady();
 
-  pointList = shuffle(pointListGenerator(pointBillList, MaxPoint));
-  
-  // console.log(pointList.reduce(reducer));
-  // console.log(pointList);
-  
+  let points = shuffle(pointListGenerator(pointBillList, MaxPoint));
+  let bombs = bombList(points);
+  let mergeList = points.concat(bombs);
+  // 重新建立亂數內容 (前10不能是炸彈)
+  pointList = mergeList.slice(0, 10).concat(shuffle(mergeList.slice(10)));
+
   pointList.forEach((v, i) => {
     addGift(v);
   });
@@ -199,14 +246,25 @@ const start = () => {
   timeLine.play(0);
 };
 
+// x秒後移除元素
+const removeElem = (elem, time) => {
+  let firsttime = true;
+  setTimeout(() => {
+    if(!firsttime) {
+      elem.remove();
+    }
+    firsttime = false;
+  }, time);
+};
+
 const cleanItems = (cb) => {
 
     gameBox.querySelectorAll('.gift').forEach((v, i) => {
       gameBox.removeChild(v);
     });
-    
+
   if(typeof cb === 'function') cb();
-}
+};
 
 /** 設定 catcher 起始位置 */
 const setCatcherToReady = () => {
@@ -220,7 +278,7 @@ const keyDownEvent = (event) => {
   if(event.keyCode && event.which === 39) {
     // ->
     moveCatcherBox(moveXWidth);
-    
+
   }
 
   if(event.keyCode && event.which === 37) {
@@ -268,7 +326,7 @@ const removekeyDownEvent = () => {
 /** helpers */
 const randomRound = (min, max) => (Math.round(Math.random() * (max - min) + min));
 const random = (min, max) => (Math.random() * (max - min) + min);
-const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
 const reducer = (accumulator, currentValue) => (accumulator + currentValue);
 
 /** events method */
