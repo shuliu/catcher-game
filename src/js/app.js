@@ -4,17 +4,22 @@
 import TweenMax from 'gsap/TweenMax';
 import TimelineMax from 'gsap/TimelineMax';
 import EasePack from 'gsap';
-import Draggable from "gsap/Draggable";
+import Draggable from 'gsap/Draggable';
 
 // (function(window){
 
 /** timeline callback */
 const timeLineOnStart = () => {
-  console.log('timeLineOnStart');
-  startBtn.disabled = true;
-  pauseBtn.disabled = false;
-  stopBtn.disabled = true;
-  resetBtn.disabled = false;
+  if(!startCallbackLock) {
+    console.log('timeLineOnStart');
+    startBtn.disabled = true;
+    pauseBtn.disabled = false;
+    stopBtn.disabled = true;
+    resetBtn.disabled = false;
+
+    startCallbackLock = true;
+  }
+  startCallbackLock = false;
 };
 
 const timeLineOnComplete = () => {
@@ -77,30 +82,31 @@ const checkHit = (elem) => {
 /**
  * variables
  */
-const gameBox         = document.querySelector('#gameBox');
-const orientation     = document.querySelector('#orientation');
-const gift            = document.querySelector('.elements .gift');
-const catcher         = document.querySelector('#gameBox .catcher');
-const scoreBox        = document.querySelector('#score');
-const startBtn        = document.querySelector('#startBtn');
-const pauseBtn        = document.querySelector('#pauseBtn');
-const stopBtn         = document.querySelector('#stopBtn');
-const resetBtn        = document.querySelector('#resetBtn');
-const MaxPoint        = 20000;
-const pointBillList   = [1000, 800, 600, 400, 200];
-let   score           = 0;
-let   pointList       = [];
-const bombKey         = 'bomb'; // 炸彈 class 名稱
-const hitKey          = 'hit'; // 碰撞 class 名稱
-const hitAnimateTime  = 3; // 碰撞後動畫運作時間 (秒)
-const moveWidth       = 40; // 物件含左右搖版寬度
-const gameTime        = 30; // 遊戲時間
-let   gameStatus      = 'stop'; // 遊戲狀態
-const gammaRange      = 5; // 水平儀 gamma 感應角度範圍 (超過才觸發移動)
-const moveXWidth      = 80; // 移動距離
-const moveXMobile     = 20; // 移動距離 (mobile device orientation)
-let   endCallbackLock = true; // timeline 結束 callback 的 lock
-let   timeLine        = new TimelineMax({
+const gameBox           = document.querySelector('#gameBox');
+const orientation       = document.querySelector('#orientation');
+const gift              = document.querySelector('.elements .gift');
+const catcher           = document.querySelector('#gameBox .catcher');
+const scoreBox          = document.querySelector('#score');
+const startBtn          = document.querySelector('#startBtn');
+const pauseBtn          = document.querySelector('#pauseBtn');
+const stopBtn           = document.querySelector('#stopBtn');
+const resetBtn          = document.querySelector('#resetBtn');
+const MaxPoint          = 20000;
+const pointBillList     = [1000, 800, 600, 400, 200];
+let   score             = 0;
+let   pointList         = [];
+const bombKey           = 'bomb'; // 炸彈 class 名稱
+const hitKey            = 'hit'; // 碰撞 class 名稱
+const hitAnimateTime    = 3; // 碰撞後動畫運作時間 (秒)
+const moveWidth         = 40; // 物件含左右搖版寬度
+const gameTime          = 30; // 遊戲時間
+let   gameStatus        = 'stop'; // 遊戲狀態
+const gammaRange        = 5; // 水平儀 gamma 感應角度範圍 (超過才觸發移動)
+const moveXWidth        = 80; // 移動距離
+const moveXMobile       = 20; // 移動距離 (mobile device orientation)
+let   startCallbackLock = true; // timeline 結束 callback 的 lock
+let   endCallbackLock   = true; // timeline 結束 callback 的 lock
+let   timeLine          = new TimelineMax({
   delay:0.5,
   onStart: timeLineOnStart,
   onComplete: timeLineOnComplete
