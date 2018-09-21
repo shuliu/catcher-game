@@ -4,7 +4,7 @@ import TimelineMax from 'gsap/TimelineMax';
 import EasePack from 'gsap';
 import Draggable from 'gsap/Draggable';
 import createElement from './vendor/createElement';
-
+import EventControl from './vendor/EventControl';
 HTMLElement.prototype.empty = function() {
   var that = this;
   while (that.hasChildNodes()) {
@@ -37,7 +37,7 @@ function objToStrMap(obj) {
 export class Catcher {
 
   constructor(configs = {}) {
-    console.log('Catcher Initil');
+    console.log('[Catcher] Initil');
 
     /** @var {object} HTMLElements */
     this.elements = new Map();
@@ -78,7 +78,24 @@ export class Catcher {
     this.startCallbackLock = true;   // timeline 結束 callback 的 lock
     this.endCallbackLock   = true;   // timeline 結束 callback 的 lock
 
+    /** 建立控制事件 */
+
+    // test /////////////////////////////////////////////
+    this.addBasket();
+
     let then = this;
+    this.eventControl = new EventControl(
+      this.elements.get('container'),
+      this.elements.get('basket'),
+    );
+    // test end /////////////////////////////////////////
+
+    this.startBtn = document.querySelector('#startBtn');
+    this.pauseBtn = document.querySelector('#pauseBtn');
+    this.stopBtn = document.querySelector('#stopBtn');
+    this.resetBtn = document.querySelector('#resetBtn');
+
+
     this.timeLine = new TimelineMax({
       delay:0.5,
       onStart: function() { then.timeLineOnStart(); },
@@ -183,8 +200,9 @@ export class Catcher {
     let maxMoveTime = 3;                                              // 最大落下時間
     let maxTime = gameTime - maxMoveTime;                             // 最大可使用時間 (總遊戲時間 - 最大落下時間)
     let delay = maxTime/totalPoint * (inlineElem + 1);                // 落下時間
-    let maxY = container.clientWidth - this.moveWidth;                // 落下 Y 軸距離 (固定)
-    let randX = random(this.moveWidth, maxY);                         // 起始 X 軸位置 (隨機))
+    let maxY = container.offsetHeight - this.moveWidth;               // 落下 Y 軸距離 (固定)
+    let randX = random(
+      this.moveWidth, (container.offsetWidth - this.moveWidth));      // 起始 X 軸位置 (隨機))
     let time = random(1, maxMoveTime);                                // 掉落時間
 
     elem.dataset.point = point; // 加上點數
@@ -265,12 +283,12 @@ export class Catcher {
     let then = this;
     if(event.keyCode && event.which === 39) {
       // ->
-      this.moveCatcherBox(this.moveXWidth);
+      then.moveCatcherBox(then.moveXWidth);
 
     }
     if(event.keyCode && event.which === 37) {
       // <-
-      this.moveCatcherBox(-this.moveXWidth);
+      then.moveCatcherBox(-then.moveXWidth);
     }
   }
 
@@ -375,7 +393,7 @@ export class Catcher {
     console.log('removekeyDownEvent');
     let then = this;
     let eventMethod = function(event) { then.keyDownEvent(event); };
-    document.removeEventListener('keydown', eventMethod);
+    document.removeEventListener('keydown', keyDownEvent);
   }
 
   /**
@@ -394,8 +412,8 @@ export class Catcher {
     // pauseBtn.disabled = false;
     // stopBtn.disabled = false;
     // resetBtn.disabled = false;
-    this.addkeyDownEvent();
-    this.mobileMove();
+    // this.addkeyDownEvent();
+    // this.mobileMove();
   }
   pause() {
     console.log('pause control');
@@ -441,10 +459,10 @@ export class Catcher {
   timeLineOnStart() {
     if(!this.startCallbackLock) {
       console.log('timeLineOnStart');
-      startBtn.disabled = true;
-      pauseBtn.disabled = false;
-      stopBtn.disabled = true;
-      resetBtn.disabled = false;
+      this.startBtn.disabled = true;
+      this.pauseBtn.disabled = false;
+      this.stopBtn.disabled = true;
+      this.resetBtn.disabled = false;
 
       this.startCallbackLock = true;
     }
@@ -458,12 +476,13 @@ export class Catcher {
     if(!this.endCallbackLock) {
       console.log('timeLineOnComplete');
       this.cleanItems();
-      this.removekeyDownEvent();
-      this.mobileStopMove();
-      startBtn.disabled = false;
-      pauseBtn.disabled = true;
-      stopBtn.disabled = true;
-      resetBtn.disabled = true;
+      this.eventControl.stop();
+      // this.removekeyDownEvent();
+      // this.mobileStopMove();
+      this.startBtn.disabled = false;
+      this.pauseBtn.disabled = true;
+      this.stopBtn.disabled = true;
+      this.resetBtn.disabled = true;
 
       this.endToSendPoint();
       this.endCallbackLock = true;
@@ -486,7 +505,11 @@ export class Catcher {
     this.clear();
 
     // 建立籃子
-    this.addBasket();
+    let container = this.elements.get('container');
+    let basket = this.elements.get('basket');
+    container.append(basket);
+    this.eventControl.start();
+    // this.addBasket();
     // 建立計分板
     this.addScoreBoard();
 
@@ -504,14 +527,13 @@ export class Catcher {
    * Initial
    */
   initial() {
-    console.log('initial');
     let then = this;
 
     /** 開始按鈕 */
-    const startBtn = document.querySelector('#startBtn');
-    startBtn.addEventListener('click', function() {then.startEvent();});
-    startBtn.addEventListener('touchend', function() {then.startEvent();});
 
-    startBtn.disabled = false;
+    this.startBtn.addEventListener('click', function() {then.startEvent();});
+    this.startBtn.addEventListener('touchend', function() {then.startEvent();});
+
+    this.startBtn.disabled = false;
   }
 }

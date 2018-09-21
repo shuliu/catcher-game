@@ -1,7 +1,7 @@
 
 html, body {
   background: #666;
-  width: 100%;
+  // width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -35,12 +35,14 @@ html, body {
 
 #gameBox {
   min-width: 300px;
+  max-width: 500px;
   width: 100%;
   height: 80%;
   margin: auto;
   background: #666;
-  overflow: hidden;
+  // overflow: hidden;
   position: relative;
+  background: lightpink;
 }
 
 .gift {
@@ -85,7 +87,7 @@ html, body {
   // width: 90%;
   height: 20px;
   display: inline-block;
-  background: lightblue;
+  background: lightseagreen;
 
   // position: absolute;
   // bottom: 0;
