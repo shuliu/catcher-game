@@ -4,39 +4,10 @@ import EasePack from 'gsap';
 import Draggable from 'gsap/Draggable';
 import createElement from './vendor/createElement';
 import EventControl from './vendor/EventControl';
-HTMLElement.prototype.empty = function () {
-  var that = this;
-  while (that.hasChildNodes()) {
-    that.removeChild(that.lastChild);
-  }
-};
+import './vendor/prototype';
+import defaultConfigs from './vendor/defaultConfigs';
+import helpers from './vendor/helpers';
 
-/** @var {object} defaultConfig 預設設定 */
-const defaultConfig = {
-  container: '#gameBox',
-  elements: {
-    basket: '#catcher',
-    gift: '.gift',
-    scoreBoard: '#score-board',
-  },
-  bombKey: 'bomb', // 炸彈 class 名稱
-  hitKey: 'hit', // 碰撞 class 名稱
-  total: 20000,
-  billList: [1000, 800, 600, 400, 200],
-  gameTime: 30, // 遊戲時間
-  endCallback: (score) => {},
-};
-
-const randomRound = (min, max) => (Math.round(Math.random() * (max - min) + min));
-const random = (min, max) => (Math.random() * (max - min) + min);
-const shuffle = (arr) => {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-};
-const reducer = (accumulator, currentValue) => (accumulator + currentValue);
 
 /**
  * json Object 轉 Map
@@ -58,7 +29,9 @@ function objToStrMap(obj) {
 export class Catcher {
 
   constructor(configs = {}) {
+
     console.log('[Catcher] Initil');
+    let then = this;
 
     this.setConfig(configs);
 
@@ -79,7 +52,6 @@ export class Catcher {
     // test /////////////////////////////////////////////
     this.addBasket();
 
-    let then = this;
     this.eventControl = new EventControl(
       this.elements.get('container'),
       this.elements.get('basket'),
@@ -113,10 +85,10 @@ export class Catcher {
     /** @var {object} HTMLElements */
     this.elements = new Map();
 
-    Object.assign(defaultConfig, configs);
+    Object.assign(defaultConfigs, configs);
 
     this.configs = null;
-    this.configs = objToStrMap(defaultConfig);
+    this.configs = objToStrMap(defaultConfigs);
     // console.log(this.configs);
 
     let thenElements = this.elements;
@@ -150,7 +122,7 @@ export class Catcher {
     let allPoints = [];
     let newPoint = 0;
     do {
-      newPoint = list.get(randomRound(0, list.size - 1) + '') || 0;
+      newPoint = list.get(helpers.randomRound(0, list.size - 1) + '') || 0;
       if (newPoint > list[0]) {
         list.shift();
         console.log('shift: ' + list);
@@ -229,9 +201,9 @@ export class Catcher {
     let maxTime = gameTime - maxMoveTime;                             // 最大可使用時間 (總遊戲時間 - 最大落下時間)
     let delay = maxTime / totalPoint * (inlineElem + 1);              // 落下時間
     let maxY = container.offsetHeight - this.moveWidth;               // 落下 Y 軸距離 (固定)
-    let randX = random(
+    let randX = helpers.random(
       this.moveWidth, (container.offsetWidth - this.moveWidth));      // 起始 X 軸位置 (隨機))
-    let time = random(1, maxMoveTime);                                // 掉落時間
+    let time = helpers.random(1, maxMoveTime);                        // 掉落時間
 
     elem.dataset.point = point;                                       // 加上點數
     elem.dataset.index = index;                                       // 加上落下順序 (debug 用)
@@ -271,6 +243,8 @@ export class Catcher {
           add: 'boom',
           total: this.score,
         });
+
+        Draggable.get(catcher).disable();
 
         this.timeLine.paused(true);
         this.endToSendPoint();
@@ -364,20 +338,49 @@ export class Catcher {
       then.startEvent();
     });
   }
+
   /** 暫停 */
   setPauseEvent(elem) {
-    elem.addEventListener('click', this.pause);
-    elem.addEventListener('touchend', this.pause);
+
+    let then = this;
+    elem.addEventListener('click', function () {
+      then.pause();
+    });
+    elem.addEventListener('touchend', function () {
+      then.pause();
+    });
   }
+
+  /** 暫停 */
+  setPauseEvent(elem) {
+    let then = this;
+    elem.addEventListener('click', function() {
+      then.pause();
+    });
+    elem.addEventListener('touchend', function() {
+      then.pause();
+    });
+  }
+
   /** 停止 */
   setStopEvent(elem) {
-    elem.addEventListener('click', this.stop);
-    elem.addEventListener('touchend', this.stop);
+    let then = this;
+    elem.addEventListener('click', function() {
+      then.stop();
+    });
+    elem.addEventListener('touchend', function() {
+      then.stop();
+    });
   }
   /** 重啟 */
   setResetEvent(elem) {
-    elem.addEventListener('click', this.reset);
-    elem.addEventListener('touchend', this.reset);
+    let then = this;
+    elem.addEventListener('click', function() {
+      then.reset();
+    });
+    elem.addEventListener('touchend', function() {
+      then.reset();
+    });
   }
 
   addkeyDownEvent() {
@@ -395,6 +398,12 @@ export class Catcher {
 
   startEvent() {
     let then = this;
+
+    then.startBtn.disabled = true;
+    then.pauseBtn.disabled = false;
+    // then.stopBtn.disabled  = false;
+    // then.resetBtn.disabled = false;
+
     if (this.timeLine._time >= this.timeLine.endTime() || this.timeLine._time === 0) {
       console.log('click to start');
       this.cleanItems(function () {
@@ -403,19 +412,70 @@ export class Catcher {
     } else {
       this.timeLine.play();
     }
-    // startBtn.disabled = true;
-    // pauseBtn.disabled = false;
-    // stopBtn.disabled = false;
-    // resetBtn.disabled = false;
   }
+
+  start() {
+
+    // 清除場上物件
+    this.clear();
+    this.timeLine.clear();
+
+    // 建立籃子
+    let container = this.elements.get('container');
+    let basket = this.elements.get('basket');
+    container.append(basket);
+    this.eventControl.start();
+    // this.addBasket();
+    // 建立計分板
+    this.addScoreBoard();
+
+    // 點數
+    let points = helpers.shuffle(this.setPoints(
+      this.configs.get('total'),
+      this.configs.get('billList')
+    ));
+    let bombs = this.bombList(points);
+    let mergeList = points.concat(bombs);
+
+    // 數量 > 10 才排序前 10 不給炸彈
+    if (points.length > 10) {
+      // 重新建立亂數內容 (前10不能是炸彈)
+      this.pointList = mergeList.slice(0, 10).concat(helpers.shuffle(mergeList.slice(10)));
+    } else {
+      this.pointList = mergeList.concat(helpers.shuffle(mergeList));
+    }
+
+    this.pointList.forEach((v, i) => this.addGift(v, i));
+
+  }
+
   pause() {
     console.log('pause control');
+    this.timeLine.paused(true);
+    this.startBtn.disabled = false;
+    this.pauseBtn.disabled = true;
+    // this.stopBtn.disabled  = false;
+    // this.resetBtn.disabled = false;
   }
   stop() {
     console.log('stop control');
+    // this.timeLine.stop(true);
+    // this.cleanItems();
+    // this.score = 0;
+    // this.startBtn.disabled = false;
+    // this.pauseBtn.disabled = true;
+    // this.stopBtn.disabled = true;
+    // this.resetBtn.disabled = true;
   }
   reset() {
     console.log('reset control');
+    // let then = this;
+    // this.pointList = [];
+    // this.cleanItems(function() {then.start()});
+    // this.startBtn.disabled = true;
+    // this.pauseBtn.disabled = false;
+    // this.stopBtn.disabled = true;
+    // this.resetBtn.disabled = true;
   }
 
   empty(elem) {
@@ -454,8 +514,8 @@ export class Catcher {
       console.log('timeLineOnStart');
       this.startBtn.disabled = true;
       this.pauseBtn.disabled = false;
-      this.stopBtn.disabled = true;
-      this.resetBtn.disabled = false;
+      // this.stopBtn.disabled = false;
+      // this.resetBtn.disabled = false;
 
       this.startCallbackLock = true;
     }
@@ -471,11 +531,6 @@ export class Catcher {
       this.cleanItems();
       this.eventControl.stop();
 
-      this.startBtn.disabled = false;
-      this.pauseBtn.disabled = true;
-      this.stopBtn.disabled = true;
-      this.resetBtn.disabled = true;
-
       this.endToSendPoint();
       this.endCallbackLock = true;
     }
@@ -488,40 +543,12 @@ export class Catcher {
     console.log({
       '得點': this.score
     });
+
+    this.startBtn.disabled = true;
+    this.pauseBtn.disabled = true;
+    // this.stopBtn.disabled = true;
+    // this.resetBtn.disabled = true;
     this.configs.get('endCallback')(this.score);
-  }
-
-
-  start() {
-
-    // 清除場上物件
-    this.clear();
-
-    // 建立籃子
-    let container = this.elements.get('container');
-    let basket = this.elements.get('basket');
-    container.append(basket);
-    this.eventControl.start();
-    // this.addBasket();
-    // 建立計分板
-    this.addScoreBoard();
-
-    // 點數
-    let points = shuffle(this.setPoints(this.configs.get('total'), this.configs.get('billList')));
-    console.log(points)
-    let bombs = this.bombList(points);
-    let mergeList = points.concat(bombs);
-
-    // 數量 > 10 才排序前 10 不給炸彈
-    if (points.length > 10) {
-      // 重新建立亂數內容 (前10不能是炸彈)
-      this.pointList = mergeList.slice(0, 10).concat(shuffle(mergeList.slice(10)));
-    } else {
-      this.pointList = mergeList.concat(shuffle(mergeList));
-    }
-
-    this.pointList.forEach((v, i) => this.addGift(v, i));
-
   }
 
   /**
@@ -531,6 +558,9 @@ export class Catcher {
 
     /** 開始按鈕 */
     this.setStartEvent(this.startBtn);
+    this.setPauseEvent(this.pauseBtn);
+    // this.setStopEvent(this.stopBtn);
+    // this.setResetEvent(this.resetBtn);
 
     this.startBtn.disabled = false;
   }

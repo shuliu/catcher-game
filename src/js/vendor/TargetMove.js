@@ -42,14 +42,16 @@ export default class TargetMove {
       bounds
     });
 
-    this.drag.enable();
+    Draggable.get(this.Control.element).enable();
+
   }
 
   /**
    * 停止 drag 事件
    */
   removeDragEvent() {
-    this.drag.disable();
+    console.log('drag disabled');
+    Draggable.get(this.Control.element).disable();
   }
 
   /**

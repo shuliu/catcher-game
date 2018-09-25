@@ -386,7 +386,7 @@ const resetEvent = () => {
   // startBtn.disabled = true;
   // pauseBtn.disabled = true;
   // stopBtn.disabled = true;
-  // pauseBtn.disabled = false;
+  // resetBtn.disabled = false;
   // removekeyDownEvent();
   // addkeyDownEvent();
   // mobileStopMove();
