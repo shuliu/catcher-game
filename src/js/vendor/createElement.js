@@ -22,51 +22,51 @@
  *    //   <a class="link" href="https://github.com/hekigan/create-element" class="paragraph">link to a site</a>
  *    // </div>
  */
-export default function createElement (querySelector = 'div', ...content) {
-    let nodeType = querySelector.match(/^[a-z0-9]+/i);
-    let id = querySelector.match(/#([a-z]+[a-z0-9-]*)/gi);
-    let classes = querySelector.match(/\.([a-z]+[a-z0-9-]*)/gi);
-    let attributes = querySelector.match(/\[([a-z][a-z-]+)(=['|"]?([^\]]*)['|"]?)?\]/gi);
-    let node = (nodeType) ? nodeType[0] : 'div';
+export default function createElement(querySelector = 'div', ...content) {
+  let nodeType = querySelector.match(/^[a-z0-9]+/i);
+  let id = querySelector.match(/#([a-z]+[a-z0-9-]*)/gi);
+  let classes = querySelector.match(/\.([a-z]+[a-z0-9-]*)/gi);
+  let attributes = querySelector.match(/\[([a-z][a-z-]+)(=['|"]?([^\]]*)['|"]?)?\]/gi);
+  let node = (nodeType) ? nodeType[0] : 'div';
 
-    if (id && id.length > 1) {
-        throw CreateElementException('only 1 ID is allowed');
-    }
+  if (id && id.length > 1) {
+    throw CreateElementException('only 1 ID is allowed');
+  }
 
-    const elt = document.createElement(node);
+  const elt = document.createElement(node);
 
-    if (id) {
-        elt.id = id[0].replace('#', '');
-    }
+  if (id) {
+    elt.id = id[0].replace('#', '');
+  }
 
-    if (classes) {
-        const attrClasses = classes.join(' ').replace(/\./g, '');
-        elt.setAttribute('class', attrClasses);
-    }
+  if (classes) {
+    const attrClasses = classes.join(' ').replace(/\./g, '');
+    elt.setAttribute('class', attrClasses);
+  }
 
-    if (attributes) {
-        attributes.forEach(item => {
-            item = item.slice(0, -1).slice(1);
-            let [label, value] = item.split('=');
-            if (value) {
-                value = value.replace(/^['"](.*)['"]$/, '$1');
-            }
-            elt.setAttribute(label, value || '');
-        });
-    }
-
-    content.forEach(item => {
-        if (typeof item === 'string' || typeof item === 'number') {
-            elt.appendChild(document.createTextNode(item));
-        } else if (item.nodeType === document.ELEMENT_NODE) {
-            elt.appendChild(item);
-        }
+  if (attributes) {
+    attributes.forEach(item => {
+      item = item.slice(0, -1).slice(1);
+      let [label, value] = item.split('=');
+      if (value) {
+        value = value.replace(/^['"](.*)['"]$/, '$1');
+      }
+      elt.setAttribute(label, value || '');
     });
+  }
 
-    return elt;
+  content.forEach(item => {
+    if (typeof item === 'string' || typeof item === 'number') {
+      elt.appendChild(document.createTextNode(item));
+    } else if (item.nodeType === document.ELEMENT_NODE) {
+      elt.appendChild(item);
+    }
+  });
+
+  return elt;
 }
 
-function CreateElementException (message) {
-    this.message = message;
-    this.name = 'CreateElementException';
+function CreateElementException(message) {
+  this.message = message;
+  this.name = 'CreateElementException';
 }

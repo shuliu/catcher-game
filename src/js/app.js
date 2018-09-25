@@ -17,6 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
       gameTime: 30, // 遊戲時間
       total: 20000, // 總點數
       billList: [1000, 800, 600, 400, 200], // 面額
+      endCallback: (score) => {
+        console.log('遊戲結束 callback');
+        console.log(score);
+      },
   };
   let config = {
     // 簡單

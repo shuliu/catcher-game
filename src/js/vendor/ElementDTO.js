@@ -1,4 +1,3 @@
-
 /**
  * 元件 DTO
  * @private
@@ -25,7 +24,7 @@ export default class ElementDTO {
    * @param {HTMLElement} elem 遊戲場景
    */
   set box(elem) {
-    if(elem instanceof HTMLElement === false) {
+    if (elem instanceof HTMLElement === false) {
       return null;
     }
 
@@ -45,7 +44,7 @@ export default class ElementDTO {
    * @param {HTMLElement} elem 控制元件
    */
   set element(elem) {
-    if(elem instanceof HTMLElement === false) {
+    if (elem instanceof HTMLElement === false) {
       return null;
     }
 

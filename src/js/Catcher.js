@@ -1,20 +1,41 @@
-
 import TweenMax from 'gsap/TweenMax';
 import TimelineMax from 'gsap/TimelineMax';
 import EasePack from 'gsap';
 import Draggable from 'gsap/Draggable';
 import createElement from './vendor/createElement';
 import EventControl from './vendor/EventControl';
-HTMLElement.prototype.empty = function() {
+HTMLElement.prototype.empty = function () {
   var that = this;
   while (that.hasChildNodes()) {
-      that.removeChild(that.lastChild);
+    that.removeChild(that.lastChild);
   }
+};
+
+/** @var {object} defaultConfig 預設設定 */
+const defaultConfig = {
+  container: '#gameBox',
+  elements: {
+    basket: '#catcher',
+    gift: '.gift',
+    scoreBoard: '#score-board',
+  },
+  bombKey: 'bomb', // 炸彈 class 名稱
+  hitKey: 'hit', // 碰撞 class 名稱
+  total: 20000,
+  billList: [1000, 800, 600, 400, 200],
+  gameTime: 30, // 遊戲時間
+  endCallback: (score) => {},
 };
 
 const randomRound = (min, max) => (Math.round(Math.random() * (max - min) + min));
 const random = (min, max) => (Math.random() * (max - min) + min);
-const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const shuffle = (arr) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
 const reducer = (accumulator, currentValue) => (accumulator + currentValue);
 
 /**
@@ -25,7 +46,7 @@ const reducer = (accumulator, currentValue) => (accumulator + currentValue);
 function objToStrMap(obj) {
   let strMap = new Map();
   for (let k of Object.keys(obj)) {
-    if(typeof obj[k] === 'object') {
+    if (typeof obj[k] === 'object') {
       strMap.set(k, objToStrMap(obj[k]));
     } else {
       strMap.set(k, obj[k]);
@@ -39,44 +60,19 @@ export class Catcher {
   constructor(configs = {}) {
     console.log('[Catcher] Initil');
 
-    /** @var {object} HTMLElements */
-    this.elements = new Map();
-    /** @var {object} defaultConfig 預設設定 */
-    const defaultConfig = {
-      container : '#gameBox',
-      elements: {
-        basket: '#catcher',
-        gift: '.gift',
-        scoreBoard: '#score-board',
-      },
-      bombKey: 'bomb', // 炸彈 class 名稱
-      hitKey: 'hit', // 碰撞 class 名稱
-      total: 20000,
-      billList: [1000, 800, 600, 400, 200],
-      gameTime: 30, // 遊戲時間
-    };
-    Object.assign(defaultConfig, configs);
+    this.setConfig(configs);
 
-    this.configs = objToStrMap(defaultConfig);
-    // console.log(this.configs);
-
-    let thenElements = this.elements;
-    this.configs.get('elements').forEach(function(config, key) {
-      thenElements.set(key, createElement(config));
-    });
-    this.gameBoxSelector(this.configs.get('container'));
-
-    this.pointList         = [];     // 禮物及炸彈數量總
-    this.score             = 0;      // 積分
-    this.bombPercentage    = 0;    // 炸彈數量 (相對於禮物數量的百分比)
-    this.hitAnimateTime    = 3;      // 碰撞後動畫運作時間 (秒)
-    this.moveWidth         = 40;     // 物件含左右搖版寬度
-    this.gameStatus        = 'stop'; // 遊戲狀態
-    this.gammaRange        = 5;      // 水平儀 gamma 感應角度範圍 (超過才觸發移動)
-    this.moveXWidth        = 80;     // 移動距離
-    this.moveXMobile       = 20;     // 移動距離 (mobile device orientation)
-    this.startCallbackLock = true;   // timeline 結束 callback 的 lock
-    this.endCallbackLock   = true;   // timeline 結束 callback 的 lock
+    this.pointList = []; // 禮物及炸彈數量總
+    this.score = 0; // 積分
+    this.bombPercentage = 0.1; // 炸彈數量 (相對於禮物數量的百分比)
+    this.hitAnimateTime = 3; // 碰撞後動畫運作時間 (秒)
+    this.moveWidth = 40; // 物件含左右搖版寬度
+    this.gameStatus = 'stop'; // 遊戲狀態
+    this.gammaRange = 5; // 水平儀 gamma 感應角度範圍 (超過才觸發移動)
+    this.moveXWidth = 80; // 移動距離
+    this.moveXMobile = 20; // 移動距離 (mobile device orientation)
+    this.startCallbackLock = true; // timeline 結束 callback 的 lock
+    this.endCallbackLock = true; // timeline 結束 callback 的 lock
 
     /** 建立控制事件 */
 
@@ -97,23 +93,52 @@ export class Catcher {
 
 
     this.timeLine = new TimelineMax({
-      delay:0.5,
-      onStart: function() { then.timeLineOnStart(); },
-      onComplete: function() { then.timeLineOnComplete(); },
+      delay: 0.5,
+      onStart: function () {
+        then.timeLineOnStart();
+      },
+      onComplete: function () {
+        then.timeLineOnComplete();
+      },
     });
 
     this.initial();
   }
 
+  /**
+   * 設定 configs
+   * @param {object} configs
+   */
+  setConfig(configs = {}) {
+    /** @var {object} HTMLElements */
+    this.elements = new Map();
+
+    Object.assign(defaultConfig, configs);
+
+    this.configs = null;
+    this.configs = objToStrMap(defaultConfig);
+    // console.log(this.configs);
+
+    let thenElements = this.elements;
+    this.configs.get('elements').forEach(function (config, key) {
+      thenElements.set(key, createElement(config));
+    });
+    this.gameBoxSelector(this.configs.get('container'));
+  }
+
+  /**
+   * 遊戲框架設定
+   * @param {string} domString
+   */
   gameBoxSelector(domString = '') {
     let elem = document.querySelector(domString);
 
     /** 若無法搜尋到主框時自動建立並插入 body 最底下 */
-    if(elem === null) {
+    if (elem === null) {
       elem = createElement(domString);
       document.body.append(elem);
     }
-     this.elements.set('container', elem);
+    this.elements.set('container', elem);
   }
 
   /**
@@ -125,25 +150,25 @@ export class Catcher {
     let allPoints = [];
     let newPoint = 0;
     do {
-      newPoint = list.get(randomRound(0, list.size-1) + '') || 0;
-      if( newPoint > list[0]) {
+      newPoint = list.get(randomRound(0, list.size - 1) + '') || 0;
+      if (newPoint > list[0]) {
         list.shift();
         console.log('shift: ' + list);
       }
-      if( newPoint <= total ) {
+      if (newPoint <= total) {
         total -= newPoint;
         allPoints.push(newPoint);
       }
-    } while ( total > 0 );
+    } while (total > 0);
 
     return allPoints;
   }
 
   /**
- * 取得炸彈總數
- * @param {array} pointList
- * @returns {array}
- */
+   * 取得炸彈總數
+   * @param {array} pointList
+   * @returns {array}
+   */
   bombList(pointList) {
     let total = Math.floor(pointList.length * this.bombPercentage);
     let bombs = [];
@@ -153,6 +178,9 @@ export class Catcher {
     return bombs;
   }
 
+  /**
+   * 建立接球控制 bar
+   */
   addBasket() {
     let container = this.elements.get('container');
     let basket = this.elements.get('basket');
@@ -177,7 +205,7 @@ export class Catcher {
 
     TweenMax.set(elem, {
       x: (container.offsetWidth - elem.offsetWidth),
-      y: (container.offsetHeight - elem.offsetHeight * 2) -10
+      y: (container.offsetHeight - elem.offsetHeight * 2) - 10
     });
   }
 
@@ -185,7 +213,7 @@ export class Catcher {
    * 建立禮物並加入時間軸內
    * {number} point 禮物配給的點數面額
    */
- addGift(point, index) {
+  addGift(point, index) {
     // elements
     let container = this.elements.get('container');
     let elem = this.elements.get('gift').cloneNode();
@@ -199,16 +227,17 @@ export class Catcher {
     let totalPoint = this.pointList.length;                           // 禮物及炸彈數量
     let maxMoveTime = 3;                                              // 最大落下時間
     let maxTime = gameTime - maxMoveTime;                             // 最大可使用時間 (總遊戲時間 - 最大落下時間)
-    let delay = maxTime/totalPoint * (inlineElem + 1);                // 落下時間
+    let delay = maxTime / totalPoint * (inlineElem + 1);              // 落下時間
     let maxY = container.offsetHeight - this.moveWidth;               // 落下 Y 軸距離 (固定)
     let randX = random(
       this.moveWidth, (container.offsetWidth - this.moveWidth));      // 起始 X 軸位置 (隨機))
     let time = random(1, maxMoveTime);                                // 掉落時間
 
-    elem.dataset.point = point; // 加上點數
-    elem.dataset.index = index; // 加上落下順序 (debug 用)
+    elem.dataset.point = point;                                       // 加上點數
+    elem.dataset.index = index;                                       // 加上落下順序 (debug 用)
+
     // 炸彈加上標記
-    if(point === bombKey) {
+    if (point === bombKey) {
       elem.classList.add(bombKey);
     }
 
@@ -216,7 +245,7 @@ export class Catcher {
       y: '+=' + maxY,
       ease: Power0.easeNone,
       onComplete: () => { elem.remove(); },
-      onUpdate: () => { this.checkHit(elem); }
+      onUpdate: () => { this.checkHit(elem); },
     }, delay);
     container.append(elem);
     return elem;
@@ -231,9 +260,9 @@ export class Catcher {
     let hitKey = this.configs.get('hitKey');
     let scoreBoard = this.elements.get('scoreBoard');
     // console.log(elem);
-    if( Draggable.hitTest(catcher, elem) ) {
+    if (Draggable.hitTest(catcher, elem)) {
       // 碰撞到炸彈
-      if(elem.className.indexOf(bombKey) >= 0) {
+      if (elem.className.indexOf(bombKey) >= 0) {
         // 遊戲停止開始算分
 
         // debug 球體落下紀錄
@@ -244,28 +273,27 @@ export class Catcher {
         });
 
         this.timeLine.paused(true);
-        this.removekeyDownEvent();
         this.endToSendPoint();
       }
       // 碰撞到彩球
-      else if(elem.className.indexOf(hitKey) === -1) {
+      else if (elem.className.indexOf(hitKey) === -1) {
         elem.classList.add(hitKey);
         this.score += parseInt(elem.dataset.point, 10);
         scoreBoard.textContent = this.score.toString();
         TweenMax.killTweensOf(elem);
 
         // debug 球體落下紀錄
-        console.log({
-          index: parseInt(elem.dataset.index, 10),
-          add: parseInt(elem.dataset.point, 10),
-          total: this.score,
-        });
+        // console.log({
+        //   index: parseInt(elem.dataset.index, 10),
+        //   add: parseInt(elem.dataset.point, 10),
+        //   total: this.score,
+        // });
 
         let newBoomElem = this.elements.get('boom').cloneNode();
         TweenMax.fromTo(newBoomElem, 3, {
-          x: elem._gsTransform.x - (elem.offsetWidth/2),
-          y: elem._gsTransform.y - (elem.offsetWidth/2),
-        },{
+          x: elem._gsTransform.x - (elem.offsetWidth / 2),
+          y: elem._gsTransform.y - (elem.offsetWidth / 2),
+        }, {
           autoAlpha: 0,
         });
         gameBox.append(newBoomElem);
@@ -281,12 +309,12 @@ export class Catcher {
    */
   keyDownEvent(event) {
     let then = this;
-    if(event.keyCode && event.which === 39) {
+    if (event.keyCode && event.which === 39) {
       // ->
       then.moveCatcherBox(then.moveXWidth);
 
     }
-    if(event.keyCode && event.which === 37) {
+    if (event.keyCode && event.which === 37) {
       // <-
       then.moveCatcherBox(-then.moveXWidth);
     }
@@ -297,7 +325,7 @@ export class Catcher {
    * @param {number} movement
    */
   moveCatcherBox(movement) {
-    if(movement === 0) {
+    if (movement === 0) {
       return false;
     }
 
@@ -308,55 +336,19 @@ export class Catcher {
     let moveX = 0;
     let time = 0.3;
 
-    if(movement > 0) {
+    if (movement > 0) {
       // ->
       moveX = (basket._gsTransform.x + movement) > maxRange ? maxRange : basket._gsTransform.x + movement;
     }
-    if(movement < 0) {
+    if (movement < 0) {
       // <-
       moveX = (basket._gsTransform.x + movement) < minRange ? minRange : basket._gsTransform.x + movement;
     }
 
     // console.log({rangX: minRange, on: moveX});
-    TweenMax.to(basket, time, {x: moveX});
-  }
-
-
-  onChangeOrientation(event) {
-    let alpha = event.alpha,
-      beta = event.beta,
-      gamma = event.gamma;
-
-    let moveData = {
-      alpha: Math.round(alpha),
-      beta: Math.round(beta),
-      gamma: Math.round(gamma)
-    };
-    if(moveData.gamma > this.gammaRange) {
-      this.moveCatcherBox(this.moveXMobile);
-    } else if(moveData.gamma < this.gammaRange) {
-      this.moveCatcherBox(-this.moveXMobile);
-    }
-
-    // orientation.innerHTML = JSON.stringify(moveData);
-    console.log(moveData);
-  }
-
-  mobileMove() {
-    if (window.DeviceOrientationEvent) {
-      let eventMethod = this.onChangeOrientation;
-      window.addEventListener('deviceorientation', eventMethod, false);
-    } else {
-      // return false;
-      console.log('not support orientation');
-    }
-  }
-
-  mobileStopMove(){
-    if (window.DeviceOrientationEvent) {
-      let eventMethod = this.onChangeOrientation;
-      window.removeEventListener('deviceorientation', eventMethod, false);
-    }
+    TweenMax.to(basket, time, {
+      x: moveX
+    });
   }
 
   /**
@@ -364,8 +356,13 @@ export class Catcher {
    */
   /** 開始 */
   setStartEvent(elem) {
-    elem.addEventListener('click', this.start);
-    elem.addEventListener('touchend', this.start);
+    let then = this;
+    elem.addEventListener('click', function () {
+      then.startEvent();
+    });
+    elem.addEventListener('touchend', function () {
+      then.startEvent();
+    });
   }
   /** 暫停 */
   setPauseEvent(elem) {
@@ -386,14 +383,10 @@ export class Catcher {
   addkeyDownEvent() {
     console.log('addkeyDownEvent');
     let then = this;
-    let eventMethod = function(event) { then.keyDownEvent(event); };
+    let eventMethod = function (event) {
+      then.keyDownEvent(event);
+    };
     document.addEventListener('keydown', eventMethod);
-  }
-  removekeyDownEvent() {
-    console.log('removekeyDownEvent');
-    let then = this;
-    let eventMethod = function(event) { then.keyDownEvent(event); };
-    document.removeEventListener('keydown', keyDownEvent);
   }
 
   /**
@@ -402,9 +395,11 @@ export class Catcher {
 
   startEvent() {
     let then = this;
-    if( this.timeLine._time >= this.timeLine.endTime() || this.timeLine._time === 0 ) {
+    if (this.timeLine._time >= this.timeLine.endTime() || this.timeLine._time === 0) {
       console.log('click to start');
-      this.cleanItems(function() {then.start()});
+      this.cleanItems(function () {
+        then.start()
+      });
     } else {
       this.timeLine.play();
     }
@@ -412,8 +407,6 @@ export class Catcher {
     // pauseBtn.disabled = false;
     // stopBtn.disabled = false;
     // resetBtn.disabled = false;
-    // this.addkeyDownEvent();
-    // this.mobileMove();
   }
   pause() {
     console.log('pause control');
@@ -427,7 +420,7 @@ export class Catcher {
 
   empty(elem) {
     while (elem.hasChildNodes()) {
-        elem.removeChild(elem.lastChild);
+      elem.removeChild(elem.lastChild);
     }
   }
 
@@ -445,11 +438,11 @@ export class Catcher {
       container.removeChild(v);
     });
 
-      container.querySelectorAll('.BoomAnimate').forEach((v, i) => {
-        container.removeChild(v);
-      });
+    container.querySelectorAll('.BoomAnimate').forEach((v, i) => {
+      container.removeChild(v);
+    });
 
-    if(typeof cb === 'function') cb();
+    if (typeof cb === 'function') cb();
   }
 
 
@@ -457,7 +450,7 @@ export class Catcher {
    * timeline callback: start
    */
   timeLineOnStart() {
-    if(!this.startCallbackLock) {
+    if (!this.startCallbackLock) {
       console.log('timeLineOnStart');
       this.startBtn.disabled = true;
       this.pauseBtn.disabled = false;
@@ -473,12 +466,11 @@ export class Catcher {
    * timeline callback: complete
    */
   timeLineOnComplete() {
-    if(!this.endCallbackLock) {
+    if (!this.endCallbackLock) {
       console.log('timeLineOnComplete');
       this.cleanItems();
       this.eventControl.stop();
-      // this.removekeyDownEvent();
-      // this.mobileStopMove();
+
       this.startBtn.disabled = false;
       this.pauseBtn.disabled = true;
       this.stopBtn.disabled = true;
@@ -496,6 +488,7 @@ export class Catcher {
     console.log({
       '得點': this.score
     });
+    this.configs.get('endCallback')(this.score);
   }
 
 
@@ -515,10 +508,18 @@ export class Catcher {
 
     // 點數
     let points = shuffle(this.setPoints(this.configs.get('total'), this.configs.get('billList')));
+    console.log(points)
     let bombs = this.bombList(points);
     let mergeList = points.concat(bombs);
-    // 重新建立亂數內容 (前10不能是炸彈)
-    this.pointList = mergeList.slice(0, 10).concat(shuffle(mergeList.slice(10)));
+
+    // 數量 > 10 才排序前 10 不給炸彈
+    if (points.length > 10) {
+      // 重新建立亂數內容 (前10不能是炸彈)
+      this.pointList = mergeList.slice(0, 10).concat(shuffle(mergeList.slice(10)));
+    } else {
+      this.pointList = mergeList.concat(shuffle(mergeList));
+    }
+
     this.pointList.forEach((v, i) => this.addGift(v, i));
 
   }
@@ -527,12 +528,9 @@ export class Catcher {
    * Initial
    */
   initial() {
-    let then = this;
 
     /** 開始按鈕 */
-
-    this.startBtn.addEventListener('click', function() {then.startEvent();});
-    this.startBtn.addEventListener('touchend', function() {then.startEvent();});
+    this.setStartEvent(this.startBtn);
 
     this.startBtn.disabled = false;
   }

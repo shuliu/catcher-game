@@ -1,4 +1,3 @@
-
 import TargetMove from './TargetMove';
 import ElementDTO from './ElementDTO';
 

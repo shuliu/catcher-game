@@ -1,4 +1,3 @@
-
 import ElementDTO from './ElementDTO';
 import Draggable from 'gsap/Draggable';
 
