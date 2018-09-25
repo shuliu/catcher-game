@@ -12,7 +12,7 @@ export default class EventControl {
    * @param {HTMLElement} elem 控制元件
    */
   constructor(box, elem) {
-    console.log('[EventControl] Initial');
+    // console.log('[EventControl] Initial');
 
     this.ControlElementDTO = new ElementDTO();
     this.ControlElementDTO.box = box;

@@ -30,7 +30,7 @@ export class Catcher {
 
   constructor(configs = {}) {
 
-    console.log('[Catcher] Initil');
+    // console.log('[Catcher] Initil');
     let then = this;
 
     this.setConfig(configs);
@@ -125,7 +125,7 @@ export class Catcher {
       newPoint = list.get(helpers.randomRound(0, list.size - 1) + '') || 0;
       if (newPoint > list[0]) {
         list.shift();
-        console.log('shift: ' + list);
+        // console.log('shift: ' + list);
       }
       if (newPoint <= total) {
         total -= newPoint;
@@ -238,11 +238,11 @@ export class Catcher {
         // 遊戲停止開始算分
 
         // debug 球體落下紀錄
-        console.log({
-          index: parseInt(elem.dataset.index, 10),
-          add: 'boom',
-          total: this.score,
-        });
+        // console.log({
+        //   index: parseInt(elem.dataset.index, 10),
+        //   add: 'boom',
+        //   total: this.score,
+        // });
 
         Draggable.get(catcher).disable();
 
@@ -373,24 +373,24 @@ export class Catcher {
     });
   }
   /** 重啟 */
-  setResetEvent(elem) {
-    let then = this;
-    elem.addEventListener('click', function() {
-      then.reset();
-    });
-    elem.addEventListener('touchend', function() {
-      then.reset();
-    });
-  }
+  // setResetEvent(elem) {
+  //   let then = this;
+  //   elem.addEventListener('click', function() {
+  //     then.reset();
+  //   });
+  //   elem.addEventListener('touchend', function() {
+  //     then.reset();
+  //   });
+  // }
 
-  addkeyDownEvent() {
-    console.log('addkeyDownEvent');
-    let then = this;
-    let eventMethod = function (event) {
-      then.keyDownEvent(event);
-    };
-    document.addEventListener('keydown', eventMethod);
-  }
+  // addkeyDownEvent() {
+  //   // console.log('addkeyDownEvent');
+  //   let then = this;
+  //   let eventMethod = function (event) {
+  //     then.keyDownEvent(event);
+  //   };
+  //   document.addEventListener('keydown', eventMethod);
+  // }
 
   /**
    * Control
@@ -405,7 +405,7 @@ export class Catcher {
     // then.resetBtn.disabled = false;
 
     if (this.timeLine._time >= this.timeLine.endTime() || this.timeLine._time === 0) {
-      console.log('click to start');
+      // console.log('click to start');
       this.cleanItems(function () {
         then.start()
       });
@@ -450,7 +450,7 @@ export class Catcher {
   }
 
   pause() {
-    console.log('pause control');
+    // console.log('pause control');
     this.timeLine.paused(true);
     this.startBtn.disabled = false;
     this.pauseBtn.disabled = true;
@@ -458,7 +458,7 @@ export class Catcher {
     // this.resetBtn.disabled = false;
   }
   stop() {
-    console.log('stop control');
+    // console.log('stop control');
     // this.timeLine.stop(true);
     // this.cleanItems();
     // this.score = 0;
@@ -468,7 +468,7 @@ export class Catcher {
     // this.resetBtn.disabled = true;
   }
   reset() {
-    console.log('reset control');
+    // console.log('reset control');
     // let then = this;
     // this.pointList = [];
     // this.cleanItems(function() {then.start()});
@@ -511,7 +511,7 @@ export class Catcher {
    */
   timeLineOnStart() {
     if (!this.startCallbackLock) {
-      console.log('timeLineOnStart');
+      // console.log('timeLineOnStart');
       this.startBtn.disabled = true;
       this.pauseBtn.disabled = false;
       // this.stopBtn.disabled = false;
@@ -527,7 +527,7 @@ export class Catcher {
    */
   timeLineOnComplete() {
     if (!this.endCallbackLock) {
-      console.log('timeLineOnComplete');
+      // console.log('timeLineOnComplete');
       this.cleanItems();
       this.eventControl.stop();
 
@@ -539,10 +539,10 @@ export class Catcher {
 
   // 遊戲結束並計算分數
   endToSendPoint() {
-    console.log('==遊戲結束並計算分數==');
-    console.log({
-      '得點': this.score
-    });
+    // console.log('==遊戲結束並計算分數==');
+    // console.log({
+    //   '得點': this.score
+    // });
 
     this.startBtn.disabled = true;
     this.pauseBtn.disabled = true;

@@ -50,7 +50,7 @@ export default class TargetMove {
    * 停止 drag 事件
    */
   removeDragEvent() {
-    console.log('drag disabled');
+    // console.log('drag disabled');
     Draggable.get(this.Control.element).disable();
   }
 
