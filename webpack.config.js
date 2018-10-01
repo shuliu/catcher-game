@@ -67,7 +67,8 @@ let config = {
   devServer: {
     publicPath: '/',
     port: 8000,
-    contentBase: './dist',
+    contentBase: path.join(__dirname, 'dist'),
+    hot: true,
   },
   plugins: [
     new CleanWebpackPlugin('dist'),

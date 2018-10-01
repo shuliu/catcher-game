@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack --mode production --progress --display-modules --colors --display-reasons",
     "dev": "webpack --mode development --module-bind js=babel-loader --module-bind css=style-loader!css-loader!sass-loader",
-    "serve": "webpack-dev-server --mode development --hot",
+    "serve": "webpack-dev-server --mode development --hot --color",
     "dash": "webpack-dashboard -- node src/js/app.js"
   },
   "devDependencies": {
