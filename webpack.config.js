@@ -9,6 +9,7 @@ const webpack = require('webpack');
 
 let config = {
   entry: [
+    "@babel/polyfill",
     path.resolve(__dirname, 'src/js/app.js'),
     path.resolve(__dirname, 'src/sass/app.scss'),
   ],
@@ -26,7 +27,6 @@ let config = {
             loader: "babel-loader",
             options: {
               cacheDirectory: true,
-              presets: ['@babel/preset-env'],
             }
           }
         ]

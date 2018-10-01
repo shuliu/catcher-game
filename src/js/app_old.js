@@ -70,7 +70,7 @@ const checkHit = (elem) => {
       },{
         autoAlpha: 0,
       });
-      gameBox.append(newBoomElem);
+      gameBox.appendChild(newBoomElem);
 
       elem.remove();
     }
@@ -144,7 +144,7 @@ const addGift = (point) => {
     onComplete: () => { elem.remove(); },
     onUpdate: () => { checkHit(elem); }
   }, delay);
-  gameBox.append(elem);
+  gameBox.appendChild(elem);
   return elem;
 };
 

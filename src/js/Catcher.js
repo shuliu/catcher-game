@@ -108,7 +108,7 @@ export class Catcher {
     /** 若無法搜尋到主框時自動建立並插入 body 最底下 */
     if (elem === null) {
       elem = createElement(domString);
-      document.body.append(elem);
+      document.body.appendChild(elem);
     }
     this.elements.set('container', elem);
   }
@@ -156,7 +156,7 @@ export class Catcher {
   addBasket() {
     let container = this.elements.get('container');
     let basket = this.elements.get('basket');
-    container.append(basket);
+    container.appendChild(basket);
     let boxSize = document.querySelector(this.configs.get('container'));
     let basketSize = boxSize.querySelector(this.configs.get('basket'));
 
@@ -173,7 +173,7 @@ export class Catcher {
     let container = this.elements.get('container');
     let elem = this.elements.get('scoreBoard');
     elem.textContent = 0;
-    container.append(elem);
+    container.appendChild(elem);
 
     TweenMax.set(elem, {
       x: (container.offsetWidth - elem.offsetWidth),
@@ -219,7 +219,7 @@ export class Catcher {
       onComplete: () => { elem.remove(); },
       onUpdate: () => { this.checkHit(elem); },
     }, delay);
-    container.append(elem);
+    container.appendChild(elem);
     return elem;
   }
 
@@ -270,7 +270,7 @@ export class Catcher {
         }, {
           autoAlpha: 0,
         });
-        gameBox.append(newBoomElem);
+        gameBox.appendChild(newBoomElem);
 
         elem.remove();
       }
@@ -423,7 +423,7 @@ export class Catcher {
     // 建立籃子
     let container = this.elements.get('container');
     let basket = this.elements.get('basket');
-    container.append(basket);
+    container.appendChild(basket);
     this.eventControl.start();
     // this.addBasket();
     // 建立計分板
