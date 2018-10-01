@@ -1,6 +1,7 @@
 ** Coding環境設定 **
 public/coffee
 node_modules
+dist
 Gemfile
 yarn.lock
 gulpfile.js
@@ -15,20 +16,6 @@ prepros.cfg
 .vscode/
 .DS_store
 
-** 規範文件工具 **
-code_example_templates/
-doc_assets/
-hologram_config.yml
 
-** 暫存備份檔 **
-mockup/_backup
-public/sass/_iconsbp.scss
 
-** Test coding **
-public/javascripts/trybxslider.js
 
-mockup/browser-upgrade.html
-mockup/event-sample.html
-mockup/cart-fix-credit/cart-list-login.html
-mockup/member-fix-v1/mb-mail-detail.html
-mockup/member-fix-v1/mb-msg-detail.html

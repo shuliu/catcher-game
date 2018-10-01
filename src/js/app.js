@@ -35,6 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
   config.easy.gameTime = 60;
   config.hard.gameTime = 10;
 
-  const myCatcher = new CatcherGame(config.hard);
+  const myCatcher = new CatcherGame(config.normal);
 
 });
