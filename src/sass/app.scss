@@ -1,6 +1,6 @@
 
 html, body {
-  background: #666;
+  // background: #666;
   // width: 100%;
   height: 100%;
   margin: 0;
@@ -35,32 +35,32 @@ html, body {
 
 #gameBox {
   min-width: 300px;
-  max-width: 500px;
+  max-width: 800px;
   width: 100%;
-  height: 80%;
+  height: 100%;
   margin: auto;
-  background: #666;
-  // overflow: hidden;
+  text-align: left;
+  overflow: hidden;
   position: relative;
-  background: lightpink;
+  background: rgba(255, 182, 193, 0.3);
 }
 
 .gift {
-  width: 20px;
-  height: 20px;
-  background: #E6E;
+  width: 27px;
+  height: 27px;
+  // background: #E6E;
   border-radius: 50px;
-  border: 1px solid #D3D;
+  // border: 1px solid #D3D;
   // display: inline-block;
 
   position: absolute;
 }
 #gameBox .gift.bomb {
   // top: -20px;
-  background: yellow;
+  // background: yellow;
 }
 
-#gameBox .gift.hit {
+#gameBox .gift.hit , #gameBox .ball.hit{
   background: #000;
   width: 40px;
   height: 40px;

@@ -14,17 +14,20 @@
 
     // gtag('config', 'UA-124676634-1');
   </script>
+  <link rel="stylesheet" href="/public/stylesheets/move.css" />
 </head>
 <body>
-  <div id="gameBox"></div>
+  <div class="wrap-bg">
+    <div id="gameBox"></div>
 
 
-  <div class="control">
-    <button type="button" id="startBtn" disabled> START </button>
-    <button type="button" id="pauseBtn" disabled> PAUSE </button>
-    <!-- <button type="button" id="stopBtn" disabled> STOP </button> -->
-    <!-- <button type="reset" id="resetBtn" disabled> RESET </button> -->
+    <div class="control">
+      <button type="button" id="startBtn" disabled> START </button>
+      <button type="button" id="pauseBtn" disabled> PAUSE </button>
+      <!-- <button type="button" id="stopBtn" disabled> STOP </button> -->
+      <!-- <button type="reset" id="resetBtn" disabled> RESET </button> -->
+    </div>
+    <div id="orientation" class="hide"></div>
   </div>
-  <div id="orientation" class="hide"></div>
 </body>
 </html>

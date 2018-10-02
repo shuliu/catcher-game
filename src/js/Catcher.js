@@ -26,6 +26,22 @@ function objToStrMap(obj) {
   return strMap;
 }
 
+/**
+ * css animation play state
+ * @param {Element} elem
+ * @param {string} state
+ */
+function animateState(elem, state = 'running') {
+  let defaultState = ['paused', 'running'];
+  state = state.toLowerCase();
+  if(defaultState.indexOf(state) < 0) {
+    return false;
+  }
+
+  elem.style.animationPlayState = state;
+  return elem;
+}
+
 export class Catcher {
 
   constructor(configs = {}) {
@@ -37,7 +53,7 @@ export class Catcher {
 
     this.pointList = []; // 禮物及炸彈數量總
     this.score = 0; // 積分
-    this.bombPercentage = 0.1; // 炸彈數量 (相對於禮物數量的百分比)
+    this.bombPercentage = 0.5; // 炸彈數量 (相對於禮物數量的百分比)
     this.hitAnimateTime = 3; // 碰撞後動畫運作時間 (秒)
     this.moveWidth = 40; // 物件含左右搖版寬度
     this.gameStatus = 'stop'; // 遊戲狀態
@@ -92,10 +108,19 @@ export class Catcher {
     // console.log(this.configs);
 
     let thenElements = this.elements;
-    this.configs.get('elements').forEach(function (config, key) {
-      thenElements.set(key, createElement(config));
+    this.configs.get('elements').forEach((config, key) => {
+      let elem = createElement(config);
+      thenElements.set(key, elem);
     });
+
     this.gameBoxSelector(this.configs.get('container'));
+
+    console.log(this.elements);
+    console.log(this.configs);
+
+    // 預置爆破元件容器
+    this.elements.get('container').appendChild(this.elements.get('explosion'));
+
   }
 
   /**
@@ -160,10 +185,12 @@ export class Catcher {
     let boxSize = document.querySelector(this.configs.get('container'));
     let basketSize = boxSize.querySelector(this.configs.get('basket'));
 
-    TweenMax.set(basket, {
-      x: (container.offsetWidth / 2 - basket.offsetWidth / 2),
-      y: (container.offsetHeight - basket.offsetHeight) - 40
-    });
+    basket.style.display = 'none';
+
+    // TweenMax.set(basket, {
+    //   x: (container.offsetWidth / 2 - basket.offsetWidth / 2),
+    //   y: (container.offsetHeight - basket.offsetHeight)
+    // });
   }
 
   /**
@@ -189,10 +216,18 @@ export class Catcher {
     // elements
     let container = this.elements.get('container');
     let elem = this.elements.get('gift').cloneNode();
+
     // keys
     let bombKey = this.configs.get('bombKey');
     let giftKey = this.configs.get('elements').get('gift');
     let gameTime = this.configs.get('gameTime');
+
+    // 非炸彈類加入彩球
+    if (point !== bombKey) {
+      let colors = this.configs.get('giftColors');
+      let ballColor = createElement(colors.get(helpers.randomRound(0, colors.size - 1) + ''));
+      elem.appendChild(ballColor);
+    }
 
     /** 計算落下時間 (等比例) */
     let inlineElem = container.querySelectorAll(giftKey).length || 0; // 已放置數量
@@ -213,7 +248,7 @@ export class Catcher {
       elem.classList.add(bombKey);
     }
 
-    this.timeLine.fromTo(elem, time, {x: randX, y: 0}, {
+    this.timeLine.fromTo(elem, time, {x: randX, y: -100}, {
       y: '+=' + maxY,
       ease: Power0.easeNone,
       onComplete: () => { elem.remove(); },
@@ -231,6 +266,7 @@ export class Catcher {
     let bombKey = this.configs.get('bombKey');
     let hitKey = this.configs.get('hitKey');
     let scoreBoard = this.elements.get('scoreBoard');
+    let catcher = this.eventControl.ControlElementDTO.element;
     // console.log(elem);
     if (Draggable.hitTest(catcher, elem)) {
       // 碰撞到炸彈
@@ -243,6 +279,14 @@ export class Catcher {
         //   add: 'boom',
         //   total: this.score,
         // });
+
+        catcher.classList.add('dark');
+
+        let explosionLocation = {
+          x: Draggable.get(catcher).x + catcher.offsetWidth * 0.5,
+          y: Draggable.get(catcher).y,
+        };
+        console.log(explosionLocation);
 
         Draggable.get(catcher).disable();
 
@@ -423,6 +467,7 @@ export class Catcher {
     // 建立籃子
     let container = this.elements.get('container');
     let basket = this.elements.get('basket');
+
     container.appendChild(basket);
     this.eventControl.start();
     // this.addBasket();
@@ -445,12 +490,18 @@ export class Catcher {
       this.pointList = mergeList.concat(helpers.shuffle(mergeList));
     }
 
+    console.log(this.pointList);
+    console.log(this.pointList.length);
+    console.log(points.length);
+    console.log(bombs.length);
+
     this.pointList.forEach((v, i) => this.addGift(v, i));
 
   }
 
   pause() {
     // console.log('pause control');
+
     this.timeLine.paused(true);
     this.startBtn.disabled = false;
     this.pauseBtn.disabled = true;
@@ -498,7 +549,7 @@ export class Catcher {
       container.removeChild(v);
     });
 
-    container.querySelectorAll('.BoomAnimate').forEach((v, i) => {
+    container.querySelectorAll(this.configs.get('boom')).forEach((v, i) => {
       container.removeChild(v);
     });
 
@@ -543,6 +594,19 @@ export class Catcher {
     // console.log({
     //   '得點': this.score
     // });
+
+    let container = this.elements.get('container');
+    let basket = this.elements.get('basket');
+    let gifts = container.querySelectorAll(this.configs.get('elements').get('gift'));
+
+    /** 球停止滾動 css animation */
+    gifts.forEach((item, key) => {
+      if(item.children.length > 0) {
+        animateState(item.children[0], 'paused');
+      }
+    });
+    /** 人物停止 css animation */
+    // animateState(basket, 'paused');
 
     this.startBtn.disabled = true;
     this.pauseBtn.disabled = true;

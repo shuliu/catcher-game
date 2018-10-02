@@ -58,10 +58,12 @@ export default class TargetMove {
    * 設定 catcher 起始位置
    */
   setLocation() {
+    this.Control.element.style.display = 'inline-block';
     const firstLocation = {
       x: (this.Control.box.clientWidth / 2 - this.Control.element.clientWidth / 2),
-      y: (this.Control.box.offsetHeight - this.Control.element.offsetHeight) - 40,
+      y: (this.Control.box.offsetHeight - this.Control.element.offsetHeight),
     };
+
 
     TweenMax.set(this.Control.element, firstLocation);
   }

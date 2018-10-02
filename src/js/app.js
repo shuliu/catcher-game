@@ -8,19 +8,22 @@ document.addEventListener("DOMContentLoaded", () => {
   /** 預設遊戲參數 normal */
   const normalConfig = {
     container: '#gameBox',        // 遊戲框
-      elements: {
-        gift: '.gift',              // 彩球
-        boom: '.BoomAnimate',       // 炸彈
-        basket: '#catcher',         // 接取物件
-        scoreBoard: '#score-board', // 計分板
-      },
-      gameTime: 30, // 遊戲時間
-      total: 20000, // 總點數
-      billList: [1000, 800, 600, 400, 200], // 面額
-      endCallback: (score) => {
-        console.log('遊戲結束 callback');
-        console.log(score);
-      },
+    giftColors: ['.ball', '.ball_2', '.ball_3', '.ball_4', '.ball_5',],
+    elements: {
+      gift: '.gift',              // 彩球
+      boom: '.BoomAnimate',       // 炸彈
+      basket: '.walk',            // 接取物件
+      explosion: '.toExplosion',  // 預計爆炸物件
+      scoreBoard: '#score-board', // 計分板
+    },
+    explosion: '.explosion', // 爆炸 class
+    gameTime: 30, // 遊戲時間
+    total: 10000, // 總點數
+    billList: [1000, 600, 400, 200], // 面額
+    endCallback: (score) => {
+      console.log('遊戲結束 callback');
+      console.log(score);
+    },
   };
   let config = {
     // 簡單
