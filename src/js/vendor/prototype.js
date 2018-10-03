@@ -7,6 +7,8 @@ HTMLElement.prototype.empty = function () {
   }
 };
 
+import './html5-dataset';
+
 /** IE >= 9 forEach */
 if (window.NodeList && !NodeList.prototype.forEach) {
   NodeList.prototype.forEach = function (callback, thisArg) {
