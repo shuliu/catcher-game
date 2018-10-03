@@ -1,7 +1,6 @@
 ** Coding環境設定 **
 public/coffee
 node_modules
-dist
 Gemfile
 yarn.lock
 gulpfile.js

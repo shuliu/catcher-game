@@ -197,6 +197,7 @@ export class Catcher {
    * 產生亂數點數
    * @param {number} total 總點數
    * @param {Map} list 面額陣列
+   * @returns {array} point list
    */
   setPoints(total, list) {
     let allPoints = [];
@@ -219,7 +220,7 @@ export class Catcher {
   /**
    * 取得炸彈總數
    * @param {array} pointList
-   * @returns {array}
+   * @returns {array} bombs list
    */
   bombList(pointList) {
     let total = Math.floor(pointList.length * this.bombPercentage);
@@ -255,7 +256,7 @@ export class Catcher {
    */
   addExplosion() {
     // 預置爆破元件容器
-    this.elements.get('container').appendChild(this.elements.get('explosion'));
+    this.elements.get('basket').appendChild(this.elements.get('explosion'));
   }
 
   /**
@@ -275,7 +276,7 @@ export class Catcher {
 
   /**
    * 建立禮物並加入時間軸內
-   * {number} point 禮物配給的點數面額
+   * @param {number} point 禮物配給的點數面額
    */
   addGift(point, index) {
     // elements
@@ -356,7 +357,6 @@ export class Catcher {
       onUpdate: () => { this.checkHit(elem); },
     }, `${delay}`);
     container.appendChild(elem);
-    return elem;
   }
 
   /**
@@ -380,8 +380,9 @@ export class Catcher {
         let explosion = this.elements.get('explosion');
         let area = getTranslate(catcher);
         let explosionLocation = {
-          x: area[0] - 50,
-          y: area[1] - 100,
+          x: -70, // area[0] - 50,
+          y: -300, //area[1] - 100,
+          scale: 2,
         };
 
         TweenMax.set(explosion, explosionLocation);
