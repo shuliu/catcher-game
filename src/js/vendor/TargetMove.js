@@ -29,11 +29,12 @@ export default class TargetMove {
 
   /**
    * 建立 drag 事件
+   * @description 感應範圍會因為物件 css scale(.5) 的關係 * 0.5
    */
   addDragEvent() {
     let bounds = {
       minX: 0,
-      maxX: this.Control.box.clientWidth - this.Control.element.clientWidth,
+      maxX: this.Control.box.clientWidth - (this.Control.element.clientWidth * 0.5), // css scale(.5)
     };
 
     this.drag = Draggable.create(this.Control.element, {
@@ -61,7 +62,7 @@ export default class TargetMove {
     this.Control.element.style.display = 'inline-block';
     const firstLocation = {
       x: (this.Control.box.clientWidth / 2 - this.Control.element.clientWidth / 2),
-      y: (this.Control.box.offsetHeight - this.Control.element.offsetHeight),
+      y: (this.Control.box.offsetHeight - this.Control.element.offsetHeight) + 70,
     };
 
 

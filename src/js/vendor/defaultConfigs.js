@@ -1,11 +1,13 @@
 /** @var {object} defaultConfig 預設設定 */
 export default {
   container: '#gameBox',
+  scoreBoard: '#score-board', // 計分板
+  timerBoard: '#timer-board', // 倒數計時板
   giftColors: ['.ball', '.ball_2', '.ball_3', '.ball_4', '.ball_5'], // 隨機彩球顏色
   elements: {
     basket: '#catcher',         // 接球員
+    sensingArea: '#realcatcher', // 接球員 (感應區)
     gift: '.gift',              // 彩球主體
-    scoreBoard: '#score-board', // 計分板
     explosion: '.toExplosion',  // 預計爆炸物件
   },
   explosion: '.explosion', // 爆炸 class

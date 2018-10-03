@@ -55,10 +55,11 @@ html, body {
 
   position: absolute;
 }
-#gameBox .gift.bomb {
-  // top: -20px;
-  // background: yellow;
-}
+
+// #gameBox .gift.bomb {
+//   top: -20px;
+//   background: yellow;
+// }
 
 #gameBox .gift.hit , #gameBox .ball.hit{
   background: #000;
@@ -94,6 +95,18 @@ html, body {
   // margin: auto;
   // left: 0;
   // right: 0;
+}
+
+// 真實感應區
+#realcatcher {
+  width: 90%;
+  height: 50%;
+  margin: 0 auto;
+  background: rgba(10, 10, 250, 0.2);
+}
+
+#score-board::before, #timer-board::before {
+  content: attr(data-title) ": ";
 }
 
 #orientation {
