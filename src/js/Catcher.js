@@ -4,6 +4,7 @@ import EasePack from 'gsap';
 import Draggable from 'gsap/Draggable';
 import createElement from './vendor/createElement';
 import EventControl from './vendor/EventControl';
+// import './vendor/polyfill';
 import './vendor/prototype';
 import defaultConfigs from './vendor/defaultConfigs';
 import helpers from './vendor/helpers';
@@ -320,8 +321,10 @@ export class Catcher {
       ? this.goTime
       : this.goTime + time / baseAddTime; // 落下時間
     this.goTime += time / baseAddTime;
-    elem.dataset.point = point;                                       // 加上點數
-    elem.dataset.index = index;                                       // 加上落下順序 (debug 用)
+    // elem.dataset.point = point;                                       // 加上點數
+    elem.setAttribute('data-point', point);
+    elem.setAttribute('data-index', index);
+    // elem.dataset.index = index;                                       // 加上落下順序 (debug 用)
 
     if( delay > maxTime ) {
       // console.log('overload')
@@ -398,7 +401,7 @@ export class Catcher {
       else if (elem.className.indexOf(hitKey) === -1) {
 
         // 計分
-        this.score += parseInt(elem.dataset.point, 10);
+        this.score += parseInt(elem.getAttribute('data-point'), 10);
         scoreBoard.textContent = this.score.toString();
 
         // tween kill
