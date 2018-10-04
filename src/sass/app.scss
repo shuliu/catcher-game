@@ -43,6 +43,7 @@ html, body {
   overflow: hidden;
   position: relative;
   background: rgba(255, 182, 193, 0.3);
+  outline: 1px solid yellow;
 }
 
 .gift {
@@ -99,23 +100,14 @@ html, body {
 
 // 真實感應區
 #realcatcher {
-  width: 90%;
+  width: 75%;
   height: 50%;
-  margin: 0 auto;
-  background: rgba(10, 10, 250, 0.2);
-}
-
-#score-board::before, #timer-board::before {
-  content: attr(data-title) ": ";
-}
-
-#orientation {
-  min-width: 300px;
-  width: 100%;
-  height: 40px;
-  background: #DDD;
-  color: #333;
-  margin: auto;
+  margin: 30px auto 0;
+  // background: rgba(10, 250, 10, 0.2);
+  outline: 1px solid red;
+  color: blue;
+  font-size: 30px;
+  text-align: center;
 }
 
 .hide {

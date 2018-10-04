@@ -1,5 +1,4 @@
 body {
-  /* text-align: center; */
   margin: 0 auto;
   background-color: #41010a;
   overflow-x: hidden;
@@ -24,7 +23,6 @@ body {
   height: 275px;
   max-width: 410px;
   width: 100%;
-  /* padding-bottom: 67.0732%; */
   background: url("/public/images/hint.png")no-repeat center top;
   z-index: 2;
   background-size: 100% auto;
@@ -50,7 +48,6 @@ body {
   right: 0;
   top: 29%;
   margin: 0 auto;
-  /*padding-top: 18%;*/
   color: #e3260d;
   font-size: 1.8rem;
   line-height: 2.5rem;
@@ -64,10 +61,8 @@ body {
   position: absolute;
   width: 100%;
   left: 41px;
-  /* right: 0; */
   top: 57.5%;
   margin: 0 auto;
-  /*padding-top: 18%;*/
   color: #e3260d;
   font-size: 2.2rem;
   line-height: 2.5rem;
@@ -83,15 +78,9 @@ body {
   top: 65%;
   max-width: 168px;
   width: 100%;
-  /*  height: 60px;*/
   margin: 0 auto;
-  /* height: 0; */
-  /*  margin-top: 4%;*/
-  /* z-index: 2; */
-  /* padding-top: 26px; */
   padding-bottom: 35.7143%;
   background: url("/public/images/START_btn.png") no-repeat center top;
-  /* background-size: 100% auto; */
 }
 
 /*Time's Up*/
@@ -237,7 +226,7 @@ body {
   right: 0;
 }
 
-/*時間*/
+/*時間板*/
 .ui_time {
   margin: 0 auto;
   position: absolute;
@@ -248,7 +237,7 @@ body {
   background-size: 100% auto;
 }
 
-/*點數*/
+/*點數板*/
 .ui_score {
   margin: 0 auto;
   position: absolute;
@@ -326,11 +315,11 @@ body {
   height: 250px;
   background-image: url("/public/images/bomb.png");
 
-  -webkit-animation: bomb .5s steps(5);
-  -moz-animation: bomb .5s steps(5);
-  -ms-animation: bomb .5s steps(5);
-  -o-animation: bomb .5s steps(5);
-  animation: bomb .5s steps(5);
+  -webkit-animation: bomb .5s steps(5) infinite;
+  -moz-animation: bomb .5s steps(5) infinite;
+  -ms-animation: bomb .5s steps(5) infinite;
+  -o-animation: bomb .5s steps(5) infinite;
+  animation: bomb .5s steps(5) infinite;
   outline: 1px solid red;
 }
 
@@ -395,6 +384,31 @@ body {
 
 }
 
+/*20181003 增加點數特效*/
+.bonus {
+  position: absolute;
+  font-size: 30px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 2px 2px 1px #3f1606, 0px 1px 20px rgba(255, 255, 255, .5);
+  bottom: 18vh;
+  left: 602px;
+  opacity: 0;
+  line-height: 20px;
+  /*  vertical-align: sub;*/
+  -webkit-animation: bonus 1.3s 1 linear;
+  -moz-animation: bonus 1.3s 1 linear;
+  -ms-animation: bonus 1.3s 1 linear;
+  -o-animation: bonus 1.3s 1 linear;
+  animation: bonus 1.3s 1 cubic-bezier(0, .88, .79, .92);
+}
+
+.bonus-txt {
+  vertical-align: 10%;
+  font-size: 20px;
+}
+
+
 /*改變物件大小*/
 .walk,
 .happy,
@@ -408,8 +422,8 @@ body {
   transform-origin: 0 0;
 }
 
-.bomb.bomb.bomb {
-  transform: scale(.25);
+.bomb {
+  transform: scale(.3);
   transform-origin: 0 0;
 }
 
@@ -485,6 +499,13 @@ body {
 
 /*mobile*/
 @media screen and (max-width:768px) {
+
+  .bonus {
+    bottom: 18vh;
+    left: 50vw;
+  }
+
+
 
   .walk,
   .happy,
@@ -901,5 +922,56 @@ body {
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+/*20181003 增加點數動畫*/
+@-ms-keyframes bonus {
+  from {
+    position: ;
+  }
+
+  to {
+    -ms-transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes bonus {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes bonus {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes bonus {
+  0% {
+    bottom: 17vh;
+    left: 602px;
+    opacity: 0;
+  }
+
+  92% {
+    bottom: 24vh;
+    left: 602px;
+    opacity: 1;
+  }
+
+  100% {
+    bottom: 24vh;
+    left: 602px;
+    opacity: 0;
   }
 }

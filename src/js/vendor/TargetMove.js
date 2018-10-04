@@ -13,6 +13,9 @@ export default class TargetMove {
    */
   constructor(ControlElementDTO) {
 
+    /** @var deviceSize 遊戲範圍判斷, 小於 800 若判定為行動裝置尺寸 */
+    this.deviceSize = 800;
+
     this.Control = ControlElementDTO;
     this.myDrag = null;
 
@@ -32,9 +35,16 @@ export default class TargetMove {
    * @description 感應範圍會因為物件 css scale(.5) 的關係 * 0.5
    */
   addDragEvent() {
+
+    let device = this.Control.box.clientWidth < this.deviceSize ? 'mobile' : 'desktop';
+    let maxX = this.Control.box.clientWidth - (this.Control.element.clientWidth * 0.5); // css scale(.5)
+    if( device === 'mobile') {
+      maxX = this.Control.box.clientWidth - (this.Control.element.clientWidth * 0.4); // css scale(.5)
+    }
+
     let bounds = {
       minX: 0,
-      maxX: this.Control.box.clientWidth - (this.Control.element.clientWidth * 0.5), // css scale(.5)
+      maxX: maxX,
     };
 
     this.drag = Draggable.create(this.Control.element, {
@@ -62,7 +72,7 @@ export default class TargetMove {
     this.Control.element.style.display = 'inline-block';
     const firstLocation = {
       x: (this.Control.box.clientWidth / 2 - this.Control.element.clientWidth / 2),
-      y: (this.Control.box.offsetHeight - this.Control.element.offsetHeight) + 70,
+      y: (this.Control.box.offsetHeight - this.Control.element.offsetHeight) + this.Control.element.offsetHeight * 0.4,
     };
 
 
