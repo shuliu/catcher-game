@@ -300,7 +300,8 @@ export class Catcher {
     let totalPoint = this.pointList.length;                           // 禮物及炸彈數量
     let maxMoveTime = 4;                                              // 最大落下時間
     let maxTime = gameTime - maxMoveTime;            // 最大可使用時間 (總遊戲時間 - 最大落下時間)
-    let maxY = container.offsetHeight - this.moveWidth;               // 落下 Y 軸距離 (固定)
+    let defY = -80;                                                   // 起始掉落 Y 軸
+    let maxY = container.offsetHeight - this.moveWidth - defY;        // 落下 Y 軸距離 (固定)
     let randX = helpers.random(
       this.moveWidth, (container.offsetWidth - this.moveWidth));      // 起始 X 軸位置 (隨機))
 
@@ -341,19 +342,12 @@ export class Catcher {
 
     }
 
-    // console.log({
-    //   index,
-    //   maxTime,
-    //   goTime: this.goTime,
-    //   delay,
-    //   time
-    // });
     // 炸彈加上標記
     if (point === bombKey) {
       elem.classList.add(bombKey);
     }
 
-    this.timeLine.fromTo(elem, time, {x: randX, y: 0}, {
+    this.timeLine.fromTo(elem, time, {x: randX, y: defY}, {
       y: '+=' + maxY,
       ease: Power0.easeNone,
       onComplete: () => { elem.remove(); },
