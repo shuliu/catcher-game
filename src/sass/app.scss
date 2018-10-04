@@ -25,9 +25,13 @@ html, body {
 
 .control {
   min-width: 100px;
-  padding: 4px;
   margin: auto;
   text-align: center;
+  z-index: 3000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   button {
     margin: 0 8px;
   }
@@ -115,15 +119,24 @@ html, body {
 }
 
 button {
-  border: 1px solid #DDD;
   border-radius: 15px;
   padding: 2px 12px;
+  background-color: darkseagreen;
+  color: #000;
 
   &:disabled {
-    color: #CCC;
-    background: #666;
+    background: chocolate;
+    color: #FFF;
   }
 }
 
+.message {
+  padding: 0;
+  position: relative;
+  text-align: center;
+  z-index: 2000;
+  color: white;
+  font-size: 14px;
+}
 
 

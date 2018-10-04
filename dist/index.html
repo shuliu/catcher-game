@@ -19,18 +19,32 @@
 </head>
 <body>
   <div class="wrap-bg">
+    <div class="curtain_l"></div>
+    <div class="curtain_r"></div>
     <div id="gameBox"></div>
 
 
     <div class="control">
-      <button type="button" id="startBtn" disabled> START </button>
-      <button type="button" id="pauseBtn" disabled> PAUSE </button>
+      <button type="button" id="startBtn" disabled> 開始 </button>
+      <button type="button" id="pauseBtn" disabled> 暫停 </button>
     </div>
-    <div id="score-board" data-title="分數"></div>
-    <div id="timer-board" data-title="時間"></div>
-    <div id="orientation" class="hide"></div>
+    <div class="ui_outer_wrap">
+      <div class="ui_time_wrap">
+        <div class="ui_time">
+          <p class="ui_text" id="timer-board">30</p>
+        </div>
+      </div>
+      <div class="ui_score_wrap">
+        <div class="ui_score">
+          <p class="ui_text" id="score-board">0</p>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <ul style="padding: 0;margin: 120px auto 0;color: white;" >
+  <ul class="message">
+    <li>遊戲開始按鈕(測試)在最上方</li>
+    <li>黃框是遊戲範圍</li>
     <li>人物中間紅框是實際感應範圍</li>
   </ul>
 
@@ -40,5 +54,5 @@
     <img rel="preload" src="/public/images/happy.png" />
     <img rel="preload" src="/public/images/walk.png" />
   </div>
-<script type="text/javascript" src="main-20ec39effd535a6ef52f.min.js"></script></body>
+<script type="text/javascript" src="main-1d5589c72dca11b12abd.min.js"></script></body>
 </html>

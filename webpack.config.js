@@ -71,7 +71,10 @@ let config = {
     hot: true,
   },
   plugins: [
-    // new CleanWebpackPlugin('dist'),
+    new CleanWebpackPlugin('dist/main-*.js', {
+      root: __dirname,
+      verbose: true,
+    }),
     new MiniCssExtractPlugin({
       filename: "stylesheets/[name].css"
     }),
