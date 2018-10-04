@@ -69,6 +69,7 @@ let config = {
     port: 8000,
     contentBase: path.join(__dirname, 'dist'),
     hot: true,
+    clientLogLevel: 'none',
   },
   plugins: [
     new CleanWebpackPlugin('dist/main-*.js', {
