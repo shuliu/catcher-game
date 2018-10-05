@@ -10,60 +10,6 @@ import defaultConfigs from './vendor/defaultConfigs';
 import helpers from './vendor/helpers';
 import Timer from './vendor/Timer';
 
-/**
- * json Object 轉 Map
- * @param {object} obj json object
- * @return {Map} 轉譯後的參數
- */
-function objToStrMap(obj) {
-  let strMap = new Map();
-  for (let k of Object.keys(obj)) {
-    if (typeof obj[k] === 'object') {
-      strMap.set(k, objToStrMap(obj[k]));
-    } else {
-      strMap.set(k, obj[k]);
-    }
-  }
-  return strMap;
-}
-
-/**
- * css animation play state
- * @param {Element} elem
- * @param {string} state
- */
-function animateState(elem, state = 'running') {
-  let defaultState = ['paused', 'running'];
-  state = state.toLowerCase();
-  if(defaultState.indexOf(state) < 0) {
-    return false;
-  }
-
-  elem.style.animationPlayState = state;
-  return elem;
-}
-
-/**
- * 取得 css transform 座標 x, y
- * @param {Element} item
- * @returns {array} [x, y]
- */
-function getTranslate(item) {
-  var transArr = [];
-
-  if (!window.getComputedStyle) return;
-  var style     = getComputedStyle(item),
-      transform = style.transform || style.webkitTransform || style.mozTransform || style.msTransform;
-  var mat       = transform.match(/^matrix3d\((.+)\)$/);
-  if (mat) return parseFloat(mat[1].split(', ')[13]);
-
-  mat = transform.match(/^matrix\((.+)\)$/);
-  mat ? transArr.push(parseFloat(mat[1].split(', ')[4])) : transArr.push(0);
-  mat ? transArr.push(parseFloat(mat[1].split(', ')[5])) : transArr.push(0);
-
-  return transArr;
-}
-
 export class Catcher {
 
   constructor(configs = {}) {
@@ -157,7 +103,7 @@ export class Catcher {
     Object.assign(defaultConfigs, configs);
 
     this.configs = null;
-    this.configs = objToStrMap(defaultConfigs);
+    this.configs = helpers.objToStrMap(defaultConfigs);
     // console.log(this.configs);
 
     let thenElements = this.elements;
@@ -299,7 +245,7 @@ export class Catcher {
     /** 計算落下時間 (等比例) */
     let inlineElem = container.querySelectorAll(giftKey).length || 0; // 已放置數量
     let totalPoint = this.pointList.length;                           // 禮物及炸彈數量
-    let maxMoveTime = 4;                                              // 最大落下時間
+    let maxMoveTime = 3;                                              // 最大落下時間
     let maxTime = gameTime - maxMoveTime;            // 最大可使用時間 (總遊戲時間 - 最大落下時間)
     let defY = -80;                                                   // 起始掉落 Y 軸
     let maxY = container.offsetHeight - this.moveWidth - defY;        // 落下 Y 軸距離 (固定)
@@ -318,23 +264,19 @@ export class Catcher {
       baseAddTime = 3.1;
     }
 
-    let time = helpers.random(3, maxMoveTime);                        // 掉落時間
+    let time = helpers.random(2, maxMoveTime);                        // 掉落時間
     let delay = this.goTime === 0
       ? this.goTime
       : this.goTime + time / baseAddTime; // 落下時間
     this.goTime += time / baseAddTime;
-    // elem.dataset.point = point;                                       // 加上點數
     elem.setAttribute('data-point', point);
     elem.setAttribute('data-index', index);
-    // elem.dataset.index = index;                                       // 加上落下順序 (debug 用)
 
     if( delay > maxTime ) {
       // console.log('overload')
       delay = maxTime - maxMoveTime;
       this.goTime = helpers.random(6, maxTime*0.3);
 
-      // debug
-      // elem.style.border='5px solid yellow';
     }
     if(total === index) {
       // console.log('最後');
@@ -376,7 +318,7 @@ export class Catcher {
         catcher.classList.add('dark');
 
         let explosion = this.elements.get('explosion');
-        let area = getTranslate(catcher);
+        let area = helpers.getTranslate(catcher);
         let explosionLocation = {
           x: -70, // area[0] - 50,
           y: -300, //area[1] - 100,
@@ -499,47 +441,6 @@ export class Catcher {
     });
   }
 
-  /** 暫停 */
-  setPauseEvent(elem) {
-    let then = this;
-    elem.addEventListener('click', function() {
-      then.pause();
-    });
-    elem.addEventListener('touchend', function() {
-      then.pause();
-    });
-  }
-
-  /** 停止 */
-  setStopEvent(elem) {
-    let then = this;
-    elem.addEventListener('click', function() {
-      then.stop();
-    });
-    elem.addEventListener('touchend', function() {
-      then.stop();
-    });
-  }
-  /** 重啟 */
-  // setResetEvent(elem) {
-  //   let then = this;
-  //   elem.addEventListener('click', function() {
-  //     then.reset();
-  //   });
-  //   elem.addEventListener('touchend', function() {
-  //     then.reset();
-  //   });
-  // }
-
-  // addkeyDownEvent() {
-  //   // console.log('addkeyDownEvent');
-  //   let then = this;
-  //   let eventMethod = function (event) {
-  //     then.keyDownEvent(event);
-  //   };
-  //   document.addEventListener('keydown', eventMethod);
-  // }
-
   /**
    * Control
    */
@@ -549,11 +450,8 @@ export class Catcher {
 
     then.startBtn.disabled = true;
     then.pauseBtn.disabled = false;
-    // then.stopBtn.disabled  = false;
-    // then.resetBtn.disabled = false;
 
     if (this.timeLine._time >= this.timeLine.endTime() || this.timeLine._time === 0) {
-      // console.log('click to start');
       this.cleanItems(function () {
         then.start();
         then.timer.start(then.configs.get('gameTime'));
@@ -579,9 +477,6 @@ export class Catcher {
 
     container.appendChild(basket);
     this.eventControl.start();
-    // this.addBasket();
-    // 建立計分板
-    // this.addScoreBoard();
 
     // 點數
     let points = helpers.shuffle(this.setPoints(
@@ -611,34 +506,11 @@ export class Catcher {
   }
 
   pause() {
-    // console.log('pause control');
 
     this.timeLine.paused(true);
     this.startBtn.disabled = false;
     this.pauseBtn.disabled = true;
     this.timer.pause();
-    // this.stopBtn.disabled  = false;
-    // this.resetBtn.disabled = false;
-  }
-  stop() {
-    // console.log('stop control');
-    // this.timeLine.stop(true);
-    // this.cleanItems();
-    // this.score = 0;
-    // this.startBtn.disabled = false;
-    // this.pauseBtn.disabled = true;
-    // this.stopBtn.disabled = true;
-    // this.resetBtn.disabled = true;
-  }
-  reset() {
-    // console.log('reset control');
-    // let then = this;
-    // this.pointList = [];
-    // this.cleanItems(function() {then.start()});
-    // this.startBtn.disabled = true;
-    // this.pauseBtn.disabled = false;
-    // this.stopBtn.disabled = true;
-    // this.resetBtn.disabled = true;
   }
 
   empty(elem) {
@@ -674,11 +546,8 @@ export class Catcher {
    */
   timeLineOnStart() {
     if (!this.startCallbackLock) {
-      // console.log('timeLineOnStart');
       this.startBtn.disabled = true;
       this.pauseBtn.disabled = false;
-      // this.stopBtn.disabled = false;
-      // this.resetBtn.disabled = false;
 
       this.startCallbackLock = true;
     }
@@ -690,7 +559,6 @@ export class Catcher {
    */
   timeLineOnComplete() {
     if (!this.endCallbackLock) {
-      // console.log('timeLineOnComplete');
       this.cleanItems();
       this.eventControl.stop();
 
@@ -702,11 +570,6 @@ export class Catcher {
 
   // 遊戲結束並計算分數
   endToSendPoint() {
-    // console.log('==遊戲結束並計算分數==');
-    // console.log({
-    //   '得點': this.score
-    // });
-
     let container = this.elements.get('container');
     let basket = this.elements.get('basket');
     let gifts = container.querySelectorAll(this.configs.get('elements').get('gift'));
@@ -714,16 +577,12 @@ export class Catcher {
     /** 球停止滾動 css animation */
     gifts.forEach((item, key) => {
       if(item.children.length > 0) {
-        animateState(item.children[0], 'paused');
+        helpers.animateState(item.children[0], 'paused');
       }
     });
-    /** 人物停止 css animation */
-    // animateState(basket, 'paused');
 
     this.startBtn.disabled = true;
     this.pauseBtn.disabled = true;
-    // this.stopBtn.disabled = true;
-    // this.resetBtn.disabled = true;
     this.configs.get('endCallback')(this.score);
   }
 
@@ -735,8 +594,6 @@ export class Catcher {
     /** 開始按鈕 */
     this.setStartEvent(this.startBtn);
     this.setPauseEvent(this.pauseBtn);
-    // this.setStopEvent(this.stopBtn);
-    // this.setResetEvent(this.resetBtn);
 
     this.startBtn.disabled = false;
   }
