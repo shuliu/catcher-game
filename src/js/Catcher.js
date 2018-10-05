@@ -75,7 +75,7 @@ export class Catcher {
 
     this.pointList = []; // 禮物及炸彈數量總
     this.score = 0; // 積分
-    this.bombPercentage = 0.5; // 炸彈數量 (相對於禮物數量的百分比)
+    this.bombPercentage = [15, 20]; // 炸彈數量 (亂數範圍)
     this.hitAnimateTime = 3; // 碰撞後動畫運作時間 (秒)
     this.goTime = 0; // delay time (累加)
     this.moveWidth = 40; // 物件含左右搖版寬度
@@ -224,7 +224,8 @@ export class Catcher {
    * @returns {array} bombs list
    */
   bombList(pointList) {
-    let total = Math.floor(pointList.length * this.bombPercentage);
+    // let total = Math.floor(pointList.length * this.bombPercentage);
+    let total = helpers.randomRound(this.bombPercentage[0], this.bombPercentage[1]);
     let bombs = [];
     for (let index = 0; index < total; index++) {
       bombs.push(this.configs.get('bombKey'));
