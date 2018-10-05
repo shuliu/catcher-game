@@ -5,6 +5,23 @@ import { Catcher as CatcherGame } from './Catcher.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
+
+  const showModal = (select) => {
+    const bk = document.querySelector('.bk'); // 背景黑底
+    const elem = document.querySelector(select);
+
+    bk.style.display='block';
+    elem.style.display='block';
+  }
+
+  const hideModal = (select) => {
+    const bk = document.querySelector('.bk'); // 背景黑底
+    const elem = document.querySelector(select); // 遊戲開始提示
+
+    bk.style.display='none';
+    elem.style.display='none';
+  }
+
   const gameConfig = {
     container: '#gameBox',      // 遊戲框
     scoreBoard: '#score-board', // 計分板
@@ -26,9 +43,23 @@ document.addEventListener("DOMContentLoaded", () => {
       600, 600,
       1000
     ], // 面額
-    endCallback: (score) => {
+    initialCallback: () => {
+      showModal('.hint');
+      console.log('initial callback');
+    },
+    startCallback: () => {
+      hideModal('.hint');
+      console.log('game start callback');
+    },
+    endCallback: (score, time) => {
+      let gameOver = document.querySelector('.game_over .score_text');
+      let timeUp = document.querySelector('.time_up .score_text');
+      gameOver.textContent = score;
+      timeUp.textContent = score;
+      showModal( time <= 0 ? '.time_up' : '.game_over');
+
       console.log('遊戲結束 callback');
-      console.log(score);
+      console.log(score, time);
     },
   };
 

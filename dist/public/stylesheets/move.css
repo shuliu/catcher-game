@@ -24,7 +24,7 @@ body {
   max-width: 410px;
   width: 100%;
   background: url("/public/images/hint.png")no-repeat center top;
-  z-index: 2;
+  z-index: 3002;
   background-size: 100% auto;
 }
 
@@ -95,7 +95,7 @@ body {
   width: 100%;
   padding-bottom: 86.7993%;
   background: url("/public/images/time_up.png")no-repeat center top;
-  z-index: 2;
+  z-index: 3002;
   background-size: 100% auto;
 }
 
@@ -111,7 +111,7 @@ body {
   width: 100%;
   padding-bottom: 86.7993%;
   background: url("/public/images/game_over.png")no-repeat center top;
-  z-index: 2;
+  z-index: 3002;
   background-size: 100% auto;
 }
 
@@ -131,7 +131,7 @@ body {
   top: 79%;
   width: 8%;
   height: 0;
-  z-index: 2;
+  z-index: 3002;
   padding-bottom: 8%;
   background: url("/public/images/FB_btn.png") no-repeat center top;
   background-size: 100% auto;
@@ -151,7 +151,7 @@ body {
   top: 79%;
   width: 8%;
   height: 0;
-  z-index: 2;
+  z-index: 3002;
   padding-bottom: 8%;
   background: url("/public/images/Line_btn.png") no-repeat center top;
   background-size: 100% auto;
@@ -164,7 +164,7 @@ body {
   top: 79%;
   width: 24%;
   height: 0;
-  z-index: 2;
+  z-index: 3002;
   padding-bottom: 8%;
   background: url("/public/images/tip_btn.png") no-repeat center top;
   background-size: 100% auto;
@@ -255,6 +255,7 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.6);
+  z-index: 3000;
 }
 
 /*小丑移動*/
@@ -319,7 +320,6 @@ body {
   -ms-animation: bomb .5s steps(5) infinite;
   -o-animation: bomb .5s steps(5) infinite;
   animation: bomb .5s steps(5) infinite;
-  outline: 1px solid red;
 }
 
 /*彩球*/

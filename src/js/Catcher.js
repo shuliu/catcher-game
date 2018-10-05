@@ -12,22 +12,6 @@ import defaultConfigs from './vendor/defaultConfigs';
 import helpers from './vendor/helpers';
 import Timer from './vendor/Timer';
 
-const showStart = () => {
-  const bk = document.querySelector('.bk'); // 背景黑底
-  const hint = document.querySelector('.hint'); // 遊戲開始提示
-
-  bk.style.display='block';
-  hint.style.display='block';
-}
-
-const hideStart = () => {
-  const bk = document.querySelector('.bk'); // 背景黑底
-  const hint = document.querySelector('.hint'); // 遊戲開始提示
-
-  bk.style.display='none';
-  hint.style.display='none';
-}
-
 export class Catcher {
 
   constructor(configs = {}) {
@@ -103,6 +87,8 @@ export class Catcher {
         then.timeLineOnComplete();
       },
     });
+
+    console.log(this.configs);
 
     this.initial();
   }
@@ -524,7 +510,7 @@ export class Catcher {
       this.pointList = mergeList.concat(helpers.shuffle(mergeList));
     }
 
-    console.log(this.pointList);
+    // console.log(this.pointList);
     console.log({
       '總數': this.pointList.length,
       '彩球': points.length,
@@ -533,7 +519,8 @@ export class Catcher {
 
     this.pointList.forEach((v, i) => this.addGift(v, i));
 
-    hideStart();
+
+    this.configs.get('startCallback')();
 
   }
 
@@ -595,6 +582,7 @@ export class Catcher {
     let container = this.elements.get('container');
     let basket = this.elements.get('basket');
     let gifts = container.querySelectorAll(this.configs.get('elements').get('gift'));
+    let time = Math.round(this.timer.getDuration() / 1000);
 
     /** 球停止滾動 css animation */
     gifts.forEach((item, key) => {
@@ -603,7 +591,7 @@ export class Catcher {
       }
     });
 
-    this.configs.get('endCallback')(this.score);
+    this.configs.get('endCallback')(this.score, time);
   }
 
   /**
@@ -612,7 +600,7 @@ export class Catcher {
   initial() {
 
     // 展開開始畫面
-    showStart();
+    this.configs.get('initialCallback')();
 
     /** 開始按鈕 */
     this.setStartEvent(this.startBtn);

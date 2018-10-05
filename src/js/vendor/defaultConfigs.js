@@ -17,5 +17,7 @@ export default {
   total: 20000,  // 總點數
   billList: [1000, 800, 600, 400, 200], // 面額
   gameTime: 30, // 遊戲時間
+  initialCallback: () => {}, // initial callback
+  startCallback: () => {}, // 遊戲開始 callback
   endCallback: (score) => {}, // 結束 callback
 };

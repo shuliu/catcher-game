@@ -40,26 +40,8 @@ html, body {
 .gift {
   width: 27px;
   height: 27px;
-  // background: #E6E;
   border-radius: 50px;
-  // border: 1px solid #D3D;
-  // display: inline-block;
-
   position: absolute;
-}
-
-#gameBox #catcher {
-  width: 16%;
-  // width: 90%;
-  height: 20px;
-  display: inline-block;
-  background: lightseagreen;
-
-  // position: absolute;
-  // bottom: 0;
-  // margin: auto;
-  // left: 0;
-  // right: 0;
 }
 
 // 真實感應區
@@ -76,27 +58,6 @@ html, body {
 
 .hide {
   display: none;
-}
-
-button {
-  border-radius: 15px;
-  padding: 2px 12px;
-  background-color: darkseagreen;
-  color: #000;
-
-  &:disabled {
-    background: chocolate;
-    color: #FFF;
-  }
-}
-
-.message {
-  padding: 0;
-  position: relative;
-  text-align: center;
-  z-index: 2000;
-  color: white;
-  font-size: 14px;
 }
 
 a {
