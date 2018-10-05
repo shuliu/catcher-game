@@ -63,7 +63,7 @@ let config = {
     ]
   },
   // resolve: {},
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     publicPath: '/',
     port: 8000,
@@ -72,7 +72,7 @@ let config = {
     clientLogLevel: 'none',
   },
   plugins: [
-    new CleanWebpackPlugin('dist/main-*.js', {
+    new CleanWebpackPlugin(['dist/main-*.js', 'dist/*.js.map'], {
       root: __dirname,
       verbose: true,
     }),
@@ -84,7 +84,8 @@ let config = {
       template: 'index.html'
     }),
     // new DashboardPlugin(),
-  ]
+  ],
+  // mode: 'production'
 };
 
 module.exports = config;

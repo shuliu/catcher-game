@@ -6,7 +6,7 @@
   "author": "shuliu <shuliu.gardiana@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode production --progress --display-modules --colors --display-reasons",
+    "build": "webpack --mode production --display-modules --colors --display-reasons",
     "dev": "webpack --mode development --module-bind js=babel-loader --module-bind css=style-loader!css-loader!sass-loader",
     "serve": "webpack-dev-server --mode development --hot --color --client-log-level error",
     "dash": "webpack-dashboard -- node src/js/app.js"
@@ -31,9 +31,9 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dashboard": "^2.0.0",
-    "webpack-dev-server": "^3.1.9"
+    "webpack-dev-server": "^3.1.9",
+    "gsap": "^2.0.2"
   },
   "dependencies": {
-    "gsap": "^2.0.2"
   }
 }

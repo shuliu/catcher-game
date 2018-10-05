@@ -76,6 +76,6 @@ export default class TargetMove {
     };
 
 
-    TweenMax.set(this.Control.element, firstLocation);
+    TweenLite.set(this.Control.element, firstLocation);
   }
 }

@@ -1,8 +1,9 @@
-import TweenMax from 'gsap/TweenMax';
-import TimelineMax from 'gsap/TimelineMax';
-import EasePack from 'gsap';
-import CubicBezier from './vendor/CubicBezier';
+
+import TimelineLite from 'gsap/TimelineLite';
+import { TweenLite, Power0 } from 'gsap/TweenLite';
 import Draggable from 'gsap/Draggable';
+
+import CubicBezier from './vendor/CubicBezier';
 import createElement from './vendor/createElement';
 import EventControl from './vendor/EventControl';
 // import './vendor/polyfill';
@@ -80,7 +81,7 @@ export class Catcher {
     this.resetBtn = document.querySelector('#resetBtn');
 
 
-    this.timeLine = new TimelineMax({
+    this.timeLine = new TimelineLite({
       delay: 0.5,
       onStart: function () {
         then.timeLineOnStart();
@@ -194,7 +195,7 @@ export class Catcher {
 
     basket.style.display = 'none';
 
-    // TweenMax.set(basket, {
+    // TweenLite.set(basket, {
     //   x: (container.offsetWidth / 2 - basket.offsetWidth / 2),
     //   y: (container.offsetHeight - basket.offsetHeight)
     // });
@@ -217,7 +218,7 @@ export class Catcher {
     // elem.textContent = 0;
     // container.appendChild(elem);
 
-    TweenMax.set(elem, {
+    TweenLite.set(elem, {
       x: (container.offsetWidth - elem.offsetWidth),
       y: (container.offsetHeight - elem.offsetHeight * 2) - 10
     });
@@ -326,7 +327,7 @@ export class Catcher {
           scale: 2,
         };
 
-        TweenMax.set(explosion, explosionLocation);
+        TweenLite.set(explosion, explosionLocation);
         explosion.classList.add(this.configs.get('explosion'));
 
         Draggable.get(catcher).disable();
@@ -344,7 +345,7 @@ export class Catcher {
         scoreBoard.textContent = this.score.toString();
 
         // tween kill
-        TweenMax.killTweensOf(elem);
+        TweenLite.killTweensOf(elem);
 
         // 人物特效
         catcher.classList.add('happy');
@@ -363,7 +364,7 @@ export class Catcher {
           y: elem._gsTransform.y - (elem.offsetWidth / 2),
         };
 
-        TweenMax.fromTo(newBonusElem, 1.3, location, {
+        TweenLite.fromTo(newBonusElem, 1.3, location, {
           y: '-=80',
           ease: CubicBezier.config(0,.88,.79,.92),
           onComplete: () => { newBonusElem.remove(); },
@@ -419,7 +420,7 @@ export class Catcher {
     }
 
     // console.log({rangX: minRange, on: moveX});
-    TweenMax.to(basket, time, {
+    TweenLite.to(basket, time, {
       x: moveX
     });
   }
