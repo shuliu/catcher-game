@@ -24,6 +24,7 @@ export class Catcher {
     this.pointList = []; // 禮物及炸彈數量總
     this.score = 0; // 積分
     this.bombPercentage = [15, 20]; // 炸彈數量 (亂數範圍)
+    this.bombFirst = 5; // 炸彈起始位置
     this.hitAnimateTime = 3; // 碰撞後動畫運作時間 (秒)
     this.goTime = 0; // delay time (累加)
     this.moveWidth = 40; // 物件含左右搖版寬度
@@ -515,10 +516,11 @@ export class Catcher {
     let bombs = this.bombList(points);
     let mergeList = points.concat(bombs);
 
-    // 數量 > 10 才排序前 10 不給炸彈
-    if (points.length > 10) {
-      // 重新建立亂數內容 (前10不能是炸彈)
-      this.pointList = mergeList.slice(0, 10).concat(helpers.shuffle(mergeList.slice(10)));
+    // 數量 > this.bombFirst 才排序前 this.bombFirst 不給炸彈
+    if (points.length > this.bombFirst) {
+      // 重新建立亂數內容 (前 this.bombFirst 不能是炸彈)
+      this.pointList = mergeList.slice(0, this.bombFirst)
+        .concat(helpers.shuffle(mergeList.slice(this.bombFirst)));
     } else {
       this.pointList = mergeList.concat(helpers.shuffle(mergeList));
     }
