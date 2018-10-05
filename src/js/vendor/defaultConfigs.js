@@ -3,6 +3,7 @@ export default {
   container: '#gameBox',
   scoreBoard: '#score-board', // 計分板
   timerBoard: '#timer-board', // 倒數計時板
+  startBtn: '#js-start-btn',  // 綁定開始按鈕
   giftColors: ['.ball', '.ball_2', '.ball_3', '.ball_4', '.ball_5'], // 隨機彩球顏色
   elements: {
     basket: '#catcher',         // 接球員

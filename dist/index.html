@@ -23,11 +23,6 @@
     <div class="curtain_r"></div>
     <div id="gameBox"></div>
 
-
-    <div class="control">
-      <button type="button" id="startBtn" disabled> 開始 </button>
-      <button type="button" id="pauseBtn" disabled> 暫停 </button>
-    </div>
     <div class="ui_outer_wrap">
       <div class="ui_time_wrap">
         <div class="ui_time">
@@ -42,11 +37,15 @@
     </div>
 
   </div>
-  <ul class="message">
-    <li>遊戲開始按鈕(測試)在最上方</li>
-    <li>黃框是遊戲範圍</li>
-    <li>人物中間紅框是實際感應範圍</li>
-  </ul>
+
+  <div class="hint" style="display:none;">
+    <div class="B_hint_wrap">
+      <p class="hint_text">移動小丑接取落下的彩球，接到炸彈將直接結束遊戲，千萬要躲開！</p>
+      <a class="start" id="js-start-btn" href="#" ></a>
+    </div>
+  </div>
+
+  <div class="bk" style="display:none;"></div>
 
   <div class="preload" style="display: none;">
     <img rel="preload" src="/public/images/dark.png" />
@@ -54,5 +53,5 @@
     <img rel="preload" src="/public/images/happy.png" />
     <img rel="preload" src="/public/images/walk.png" />
   </div>
-<script type="text/javascript" src="main-300a59faa489abbdd405.min.js"></script></body>
+<script type="text/javascript" src="main-93f161b8255cd033c08c.min.js"></script></body>
 </html>

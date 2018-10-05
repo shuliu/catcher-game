@@ -12,6 +12,22 @@ import defaultConfigs from './vendor/defaultConfigs';
 import helpers from './vendor/helpers';
 import Timer from './vendor/Timer';
 
+const showStart = () => {
+  const bk = document.querySelector('.bk'); // 背景黑底
+  const hint = document.querySelector('.hint'); // 遊戲開始提示
+
+  bk.style.display='block';
+  hint.style.display='block';
+}
+
+const hideStart = () => {
+  const bk = document.querySelector('.bk'); // 背景黑底
+  const hint = document.querySelector('.hint'); // 遊戲開始提示
+
+  bk.style.display='none';
+  hint.style.display='none';
+}
+
 export class Catcher {
 
   constructor(configs = {}) {
@@ -76,11 +92,7 @@ export class Catcher {
     );
     // test end /////////////////////////////////////////
 
-    this.startBtn = document.querySelector('#startBtn');
-    this.pauseBtn = document.querySelector('#pauseBtn');
-    this.stopBtn = document.querySelector('#stopBtn');
-    this.resetBtn = document.querySelector('#resetBtn');
-
+    this.startBtn = document.querySelector(this.configs.get('startBtn'));
 
     this.timeLine = new TimelineLite({
       delay: 0.5,
@@ -459,18 +471,6 @@ export class Catcher {
     });
   }
 
-  /** 暫停 */
-  setPauseEvent(elem) {
-
-    let then = this;
-    elem.addEventListener('click', function () {
-      then.pause();
-    });
-    elem.addEventListener('touchend', function () {
-      then.pause();
-    });
-  }
-
   /**
    * Control
    */
@@ -479,7 +479,6 @@ export class Catcher {
     let then = this;
 
     then.startBtn.disabled = true;
-    then.pauseBtn.disabled = false;
 
     if (this.timeLine._time >= this.timeLine.endTime() || this.timeLine._time === 0) {
       this.cleanItems(function () {
@@ -534,14 +533,8 @@ export class Catcher {
 
     this.pointList.forEach((v, i) => this.addGift(v, i));
 
-  }
+    hideStart();
 
-  pause() {
-
-    this.timeLine.paused(true);
-    this.startBtn.disabled = false;
-    this.pauseBtn.disabled = true;
-    this.timer.pause();
   }
 
   empty(elem) {
@@ -578,8 +571,6 @@ export class Catcher {
   timeLineOnStart() {
     if (!this.startCallbackLock) {
       this.startBtn.disabled = true;
-      this.pauseBtn.disabled = false;
-
       this.startCallbackLock = true;
     }
     this.startCallbackLock = false;
@@ -612,8 +603,6 @@ export class Catcher {
       }
     });
 
-    this.startBtn.disabled = true;
-    this.pauseBtn.disabled = true;
     this.configs.get('endCallback')(this.score);
   }
 
@@ -622,9 +611,11 @@ export class Catcher {
    */
   initial() {
 
+    // 展開開始畫面
+    showStart();
+
     /** 開始按鈕 */
     this.setStartEvent(this.startBtn);
-    this.setPauseEvent(this.pauseBtn);
 
     this.startBtn.disabled = false;
   }
