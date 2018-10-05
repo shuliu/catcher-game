@@ -61,33 +61,6 @@ html, body {
   position: absolute;
 }
 
-// #gameBox .gift.bomb {
-//   top: -20px;
-//   background: yellow;
-// }
-
-#gameBox .gift.hit , #gameBox .ball.hit{
-  // background: #000;
-  width: 40px;
-  height: 40px;
-  transition-duration: 3s;
-  opacity: 0;
-}
-
-.BoomAnimate {
-  width: 40px;
-  height: 40px;
-  border-radius: 50px;
-  background: lightgreen;
-  position: absolute;
-  opacity: 1;
-}
-
-.BoomAnimate.hit {
-  transition-duration: 5s;
-  opacity: 0;
-}
-
 #gameBox #catcher {
   width: 16%;
   // width: 90%;

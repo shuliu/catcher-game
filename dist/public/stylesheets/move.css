@@ -267,7 +267,6 @@ body {
   -ms-animation: play .5s steps(20) infinite;
   -o-animation: play .5s steps(20) infinite;
   animation: play .5s steps(20) infinite;
-  outline: 1px solid green;
 }
 
 /*小丑接到球*/
@@ -386,20 +385,12 @@ body {
 
 /*20181003 增加點數特效*/
 .bonus {
-  position: absolute;
   font-size: 30px;
   font-weight: bold;
   color: #fff;
   text-shadow: 2px 2px 1px #3f1606, 0px 1px 20px rgba(255, 255, 255, .5);
-  bottom: 18vh;
-  left: 602px;
   opacity: 0;
   line-height: 20px;
-  /*  vertical-align: sub;*/
-  -webkit-animation: bonus 1.3s 1 linear;
-  -moz-animation: bonus 1.3s 1 linear;
-  -ms-animation: bonus 1.3s 1 linear;
-  -o-animation: bonus 1.3s 1 linear;
   animation: bonus 1.3s 1 cubic-bezier(0, .88, .79, .92);
 }
 

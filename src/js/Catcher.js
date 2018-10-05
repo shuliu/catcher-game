@@ -1,6 +1,7 @@
 import TweenMax from 'gsap/TweenMax';
 import TimelineMax from 'gsap/TimelineMax';
 import EasePack from 'gsap';
+import CubicBezier from './vendor/CubicBezier';
 import Draggable from 'gsap/Draggable';
 import createElement from './vendor/createElement';
 import EventControl from './vendor/EventControl';
@@ -60,7 +61,7 @@ export class Catcher {
     // 設定初始分數
     this.elements.get('scoreBoard').textContent = 0;
     // 設定初始時間
-    this.elements.get('timerBoard').textContent = this.configs.get('gametime');
+    this.elements.get('timerBoard').textContent = this.configs.get('gameTime');
 
     /** 建立控制事件 */
 
@@ -338,7 +339,8 @@ export class Catcher {
       else if (elem.className.indexOf(hitKey) === -1) {
 
         // 計分
-        this.score += parseInt(elem.getAttribute('data-point'), 10);
+        let point = parseInt(elem.getAttribute('data-point'), 10);
+        this.score += point;
         scoreBoard.textContent = this.score.toString();
 
         // tween kill
@@ -352,14 +354,21 @@ export class Catcher {
 
         // 彩球特效
         elem.classList.add(hitKey);
-        let newBoomElem = this.elements.get('boom').cloneNode();
-        TweenMax.fromTo(newBoomElem, 3, {
+
+        // popup 分數元件
+        let newBonusElem = this.genBonusElement(point);
+
+        let location = {
           x: elem._gsTransform.x - (elem.offsetWidth / 2),
           y: elem._gsTransform.y - (elem.offsetWidth / 2),
-        }, {
-          autoAlpha: 0,
+        };
+
+        TweenMax.fromTo(newBonusElem, 1.3, location, {
+          y: '-=80',
+          ease: CubicBezier.config(0,.88,.79,.92),
+          onComplete: () => { newBonusElem.remove(); },
         });
-        gameBox.appendChild(newBoomElem);
+        gameBox.appendChild(newBonusElem);
 
         // 移除彩球
         elem.remove();
@@ -413,6 +422,25 @@ export class Catcher {
     TweenMax.to(basket, time, {
       x: moveX
     });
+  }
+
+  /**
+   * 建立 popup 分數元件
+   * @param {number} point 點數
+   * @returns {Element} popup 分數元件
+   */
+  genBonusElement(point) {
+    let bonus = createElement('div');
+    let firstTxt = createElement('span.bonus-txt');
+    let lastTxt = firstTxt.cloneNode();
+    let pointTxt = document.createTextNode(point);
+    bonus.classList.add('bonus');
+    firstTxt.textContent = '+';
+    lastTxt.textContent = '點';
+    bonus.appendChild(firstTxt);
+    bonus.appendChild(pointTxt);
+    bonus.appendChild(lastTxt);
+    return bonus;
   }
 
   /**
