@@ -43,7 +43,7 @@ export class Catcher {
         elem.textContent = sec;
       },
       onstart : function() {
-        console.log('timer started');
+        // console.log('timer started');
         let elem = then.elements.get('timerBoard');
         let gameTime = then.configs.get('gameTime').toString();
 
@@ -51,12 +51,12 @@ export class Catcher {
           elem.textContent = gameTime;
         }
       },
-      onstop  : () => { console.log('timer stop') },
-      onpause : () => { console.log('timer set on pause') },
+      // onstop  : () => { console.log('timer stop') },
+      // onpause : () => { console.log('timer set on pause') },
       onend   : function() {
         let elem = then.elements.get('timerBoard');
         elem.textContent = 0;
-        console.log('timer ended normally')
+        // console.log('timer ended normally')
       }
     });
 
@@ -88,7 +88,7 @@ export class Catcher {
       },
     });
 
-    console.log(this.configs);
+    // console.log(this.configs);
 
     this.initial();
   }
@@ -244,8 +244,6 @@ export class Catcher {
     }
 
     /** 計算落下時間 (等比例) */
-    let inlineElem = container.querySelectorAll(giftKey).length || 0; // 已放置數量
-    let totalPoint = this.pointList.length;                           // 禮物及炸彈數量
     let maxMoveTime = 3;                                              // 最大落下時間
     let maxTime = gameTime - maxMoveTime;            // 最大可使用時間 (總遊戲時間 - 最大落下時間)
     let defY = -80;                                                   // 起始掉落 Y 軸
@@ -511,11 +509,11 @@ export class Catcher {
     }
 
     // console.log(this.pointList);
-    console.log({
-      '總數': this.pointList.length,
-      '彩球': points.length,
-      '炸彈': bombs.length
-    });
+    // console.log({
+    //   '總數': this.pointList.length,
+    //   '彩球': points.length,
+    //   '炸彈': bombs.length
+    // });
 
     this.pointList.forEach((v, i) => this.addGift(v, i));
 

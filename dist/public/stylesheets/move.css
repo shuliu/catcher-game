@@ -10,7 +10,7 @@ body {
   margin: 0 auto;
   max-width: 1200px;
   height: 650px;
-  background: url("/public/images/bg.jpg")center top;
+  background: url("/public/images/eventsite/catcher201810/bg.jpg")center top;
 }
 
 /**/
@@ -23,7 +23,7 @@ body {
   height: 275px;
   max-width: 410px;
   width: 100%;
-  background: url("/public/images/hint.png")no-repeat center top;
+  background: url("/public/images/eventsite/catcher201810/hint.png")no-repeat center top;
   z-index: 3002;
   background-size: 100% auto;
 }
@@ -80,7 +80,7 @@ body {
   width: 100%;
   margin: 0 auto;
   padding-bottom: 23%;
-  background: url("/public/images/START_btn.png") no-repeat center top;
+  background: url("/public/images/eventsite/catcher201810/START_btn.png") no-repeat center top;
 }
 
 /*Time's Up*/
@@ -94,7 +94,7 @@ body {
   max-width: 553px;
   width: 100%;
   padding-bottom: 86.7993%;
-  background: url("/public/images/time_up.png")no-repeat center top;
+  background: url("/public/images/eventsite/catcher201810/time_up.png")no-repeat center top;
   z-index: 3002;
   background-size: 100% auto;
 }
@@ -110,7 +110,7 @@ body {
   max-width: 553px;
   width: 100%;
   padding-bottom: 86.7993%;
-  background: url("/public/images/game_over.png")no-repeat center top;
+  background: url("/public/images/eventsite/catcher201810/game_over.png")no-repeat center top;
   z-index: 3002;
   background-size: 100% auto;
 }
@@ -133,7 +133,7 @@ body {
   height: 0;
   z-index: 3002;
   padding-bottom: 8%;
-  background: url("/public/images/FB_btn.png") no-repeat center top;
+  background: url("/public/images/eventsite/catcher201810/FB_btn.png") no-repeat center top;
   background-size: 100% auto;
 }
 
@@ -153,7 +153,7 @@ body {
   height: 0;
   z-index: 3002;
   padding-bottom: 8%;
-  background: url("/public/images/Line_btn.png") no-repeat center top;
+  background: url("/public/images/eventsite/catcher201810/Line_btn.png") no-repeat center top;
   background-size: 100% auto;
 }
 
@@ -166,7 +166,7 @@ body {
   height: 0;
   z-index: 3002;
   padding-bottom: 8%;
-  background: url("/public/images/tip_btn.png") no-repeat center top;
+  background: url("/public/images/eventsite/catcher201810/tip_btn.png") no-repeat center top;
   background-size: 100% auto;
 }
 
@@ -191,7 +191,7 @@ body {
   top: 0;
   width: 155px;
   height: 650px;
-  background: url("/public/images/curtain_l.png");
+  background: url("/public/images/eventsite/catcher201810/curtain_l.png");
 }
 
 .curtain_r {
@@ -200,7 +200,7 @@ body {
   top: 0;
   width: 155px;
   height: 650px;
-  background: url("/public/images/curtain_r.png");
+  background: url("/public/images/eventsite/catcher201810/curtain_r.png");
 }
 
 /*控制UI最大寬度範圍*/
@@ -233,7 +233,7 @@ body {
   top: 0;
   width: 100%;
   padding-bottom: 34.5882%;
-  background: url("/public/images/ui-time.png")center top no-repeat;
+  background: url("/public/images/eventsite/catcher201810/ui-time.png")center top no-repeat;
   background-size: 100% auto;
 }
 
@@ -244,7 +244,7 @@ body {
   top: 0;
   width: 100%;
   padding-bottom: 34.5882%;
-  background: url("/public/images/ui-score.png")center top no-repeat;
+  background: url("/public/images/eventsite/catcher201810/ui-score.png")center top no-repeat;
   background-size: 100% auto;
 }
 
@@ -262,7 +262,7 @@ body {
 .walk {
   width: 220px;
   height: 250px;
-  background-image: url("/public/images/walk.png");
+  background-image: url("/public/images/eventsite/catcher201810/walk.png");
   -webkit-animation: play .5s steps(20) infinite;
   -moz-animation: play .5s steps(20) infinite;
   -ms-animation: play .5s steps(20) infinite;
@@ -274,7 +274,7 @@ body {
 .happy {
   width: 220px;
   height: 250px;
-  background-image: url("/public/images/happy.png");
+  background-image: url("/public/images/eventsite/catcher201810/happy.png");
 
   -webkit-animation: play .5s steps(20) infinite;
   -moz-animation: play .5s steps(20) infinite;
@@ -287,7 +287,7 @@ body {
 .dark {
   width: 250px;
   height: 250px;
-  background-image: url("/public/images/dark.png");
+  background-image: url("/public/images/eventsite/catcher201810/dark.png");
 
   -webkit-animation: dark 1s steps(39);
   -moz-animation: dark 1s steps(39);
@@ -299,7 +299,7 @@ body {
 .explosion {
   width: 200px;
   height: 200px;
-  background-image: url("/public/images/explosion.png");
+  background-image: url("/public/images/eventsite/catcher201810/explosion.png");
 
   -webkit-animation: explosion .7s steps(10);
   -moz-animation: explosion .7s steps(10);
@@ -313,7 +313,7 @@ body {
 .bomb.bomb.bomb {
   width: 165px;
   height: 250px;
-  background-image: url("/public/images/bomb.png");
+  background-image: url("/public/images/eventsite/catcher201810/bomb.png");
 
   -webkit-animation: bomb .5s steps(5) infinite;
   -moz-animation: bomb .5s steps(5) infinite;
@@ -326,7 +326,7 @@ body {
 .ball {
   width: 27px;
   height: 27px;
-  background-image: url("/public/images/ball_1.png");
+  background-image: url("/public/images/eventsite/catcher201810/ball_1.png");
   -webkit-animation: spin .5s infinite linear;
   -moz-animation: spin .5s infinite linear;
   -ms-animation: spin .5s infinite linear;
@@ -338,7 +338,7 @@ body {
 .ball_2 {
   width: 27px;
   height: 27px;
-  background-image: url("/public/images/ball_2.png");
+  background-image: url("/public/images/eventsite/catcher201810/ball_2.png");
   -webkit-animation: spin .5s infinite linear;
   -moz-animation: spin .5s infinite linear;
   -ms-animation: spin .5s infinite linear;
@@ -350,7 +350,7 @@ body {
 .ball_3 {
   width: 27px;
   height: 27px;
-  background-image: url("/public/images/ball_3.png");
+  background-image: url("/public/images/eventsite/catcher201810/ball_3.png");
   -webkit-animation: spin .5s infinite linear;
   -moz-animation: spin .5s infinite linear;
   -ms-animation: spin .5s infinite linear;
@@ -362,7 +362,7 @@ body {
 .ball_4 {
   width: 27px;
   height: 27px;
-  background-image: url("/public/images/ball_4.png");
+  background-image: url("/public/images/eventsite/catcher201810/ball_4.png");
   -webkit-animation: spin .5s infinite linear;
   -moz-animation: spin .5s infinite linear;
   -ms-animation: spin .5s infinite linear;
@@ -374,7 +374,7 @@ body {
 .ball_5 {
   width: 27px;
   height: 27px;
-  background-image: url("/public/images/ball_5.png");
+  background-image: url("/public/images/eventsite/catcher201810/ball_5.png");
   -webkit-animation: spin .5s infinite linear;
   -moz-animation: spin .5s infinite linear;
   -ms-animation: spin .5s infinite linear;
@@ -603,7 +603,7 @@ body {
   .ui_time {
     width: 100%;
     padding-bottom: 84.6821%;
-    background: url("/public/images/ui-time_m.png")center top no-repeat;
+    background: url("/public/images/eventsite/catcher201810/ui-time_m.png")center top no-repeat;
     background-size: 100% auto;
   }
 
@@ -611,7 +611,7 @@ body {
   .ui_score {
     width: 100%;
     padding-bottom: 84.6821%;
-    background: url("/public/images/ui-score_m.png")center top no-repeat;
+    background: url("/public/images/eventsite/catcher201810/ui-score_m.png")center top no-repeat;
     background-size: 100% auto;
   }
 
@@ -634,7 +634,7 @@ body {
 
   .wrap-bg {
     height: 593px;
-    background: url(/public/images/bg.jpg)center -55px;
+    background: url("/public/images/eventsite/catcher201810/bg.jpg")center -55px;
   }
 
 }
@@ -644,14 +644,14 @@ body {
   .ui_time {
     width: 100%;
     padding-bottom: 34.5882%;
-    background: url("/public/images/ui-time.png")center top no-repeat;
+    background: url("/public/images/eventsite/catcher201810/ui-time.png")center top no-repeat;
     background-size: 100% auto;
   }
 
   .ui_score {
     width: 100%;
     padding-bottom: 34.5882%;
-    background: url("/public/images/ui-score.png")center top no-repeat;
+    background: url("/public/images/eventsite/catcher201810/ui-score.png")center top no-repeat;
     background-size: 100% auto;
   }
 

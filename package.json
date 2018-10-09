@@ -22,6 +22,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
     "file-loader": "^2.0.0",
+    "gsap": "^2.0.2",
     "html-webpack-plugin": "^3.2.0",
     "javascript-state-machine": "^3.1.0",
     "mini-css-extract-plugin": "^0.4.3",
@@ -31,9 +32,11 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dashboard": "^2.0.0",
-    "webpack-dev-server": "^3.1.9",
-    "gsap": "^2.0.2"
+    "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "promise": "^8.0.2",
+    "qs": "^6.5.2"
   }
 }
