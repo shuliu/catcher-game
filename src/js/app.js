@@ -80,9 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
     gameConfig.billList = data.denomination.split(',').map(Number);
 
     if(data.status === 'error') {
-      alert(data.message);
-      // location.href = APIS.WEB_URL;
+      popupMessageToRedirect(data.message, data.redirect);
     }
+
     if(value.data.status === 'play') {
       hideLoading();
       const myCatcher = new CatcherGame(gameConfig);
@@ -111,6 +111,21 @@ document.addEventListener("DOMContentLoaded", () => {
     alert('系統忙碌中請稍候再試。');
     location.href = WEB_URL;
   }
+
+  /**
+   * popup message and redirect
+   * @param {string} message
+   * @param {string} url
+   */
+  const popupMessageToRedirect = (message = '', url = '') => {
+    if(message !== '') {
+      alert(message);
+    }
+
+    if(url !== '') {
+      location.href = url;
+    }
+  };
 
   /**
    * post score to db
