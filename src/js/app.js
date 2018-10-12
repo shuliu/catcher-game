@@ -94,6 +94,12 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {object} res response json object
    */
   const postUserDataCallback = (res, userData) => {
+    if(res.data.status === 'error') {
+      popupMessageToRedirect(res.data.message);
+      hideLoading();
+      return '';
+    }
+
     let gameOver = document.querySelector('.game_over .score_text');
     let timeUp = document.querySelector('.time_up .score_text');
     gameOver.textContent = userData.score;
@@ -121,9 +127,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if(message !== '') {
       alert(message);
     }
-
     if(url !== '') {
-      location.href = url;
+      console.log(url);
+      console.log(url === '');
+      // location.href = url;
     }
   };
 

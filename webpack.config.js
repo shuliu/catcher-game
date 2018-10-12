@@ -6,6 +6,14 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
+/**
+ * apis json
+ */
+
+/** @var {object} getInfoData 起始遊戲資訊 */
+const getInfoData = require('./src/json/catcher-game-info');
+/** @var {object} postData 送出得點資訊領點 */
+const postData = require('./src/json/catcher-game-post');
 
 let config = {
   entry: [
@@ -70,6 +78,10 @@ let config = {
     contentBase: path.join(__dirname, 'dist'),
     hot: true,
     clientLogLevel: 'none',
+    setup(app){
+      app.get('/eventsite/Catcher/201810/getInfo', (req, res) => res.send(getInfoData) )
+      app.post('/eventsite/Catcher/201810/post', (req, res) => res.send(postData) )
+    },
   },
   plugins: [
     new CleanWebpackPlugin(['dist/main-*.js', 'dist/*.js.map'], {
