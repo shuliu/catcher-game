@@ -30,7 +30,7 @@ if(
   location.host.indexOf('.local') >= 0 ||
   location.host.indexOf('senao.com.tw') >= 0
 ) {
-
+  EVENT_KEY = location.href.substr(location.href.lastIndexOf('/') + 1);
   WEB_URL = `//${location.host}`;
   EVENT_URL = `${WEB_URL}/eventsite/Catcher/${EVENT_KEY}`;
   GET_INFO_API = `${EVENT_URL}/getInfo`;
