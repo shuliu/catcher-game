@@ -1,4 +1,3 @@
-
 const randomRound = (min, max) => (Math.round(Math.random() * (max - min) + min));
 const random = (min, max) => (Math.random() * (max - min) + min);
 const shuffle = (arr) => {
@@ -35,7 +34,7 @@ function objToStrMap(obj) {
 function animateState(elem, state = 'running') {
   let defaultState = ['paused', 'running'];
   state = state.toLowerCase();
-  if(defaultState.indexOf(state) < 0) {
+  if (defaultState.indexOf(state) < 0) {
     return false;
   }
 
@@ -52,9 +51,9 @@ function getTranslate(item) {
   var transArr = [];
 
   if (!window.getComputedStyle) return;
-  var style     = getComputedStyle(item),
-      transform = style.transform || style.webkitTransform || style.mozTransform || style.msTransform;
-  var mat       = transform.match(/^matrix3d\((.+)\)$/);
+  var style = getComputedStyle(item),
+    transform = style.transform || style.webkitTransform || style.mozTransform || style.msTransform;
+  var mat = transform.match(/^matrix3d\((.+)\)$/);
   if (mat) return parseFloat(mat[1].split(', ')[13]);
 
   mat = transform.match(/^matrix\((.+)\)$/);
@@ -64,4 +63,12 @@ function getTranslate(item) {
   return transArr;
 }
 
-export default { randomRound, random, shuffle, reducer, objToStrMap, animateState, getTranslate }
+export default {
+  randomRound,
+  random,
+  shuffle,
+  reducer,
+  objToStrMap,
+  animateState,
+  getTranslate
+}

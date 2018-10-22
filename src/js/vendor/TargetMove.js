@@ -38,7 +38,7 @@ export default class TargetMove {
 
     let device = this.Control.box.clientWidth < this.deviceSize ? 'mobile' : 'desktop';
     let maxX = this.Control.box.clientWidth - (this.Control.element.clientWidth * 0.5); // css scale(.5)
-    if( device === 'mobile') {
+    if (device === 'mobile') {
       maxX = this.Control.box.clientWidth - (this.Control.element.clientWidth * 0.4); // css scale(.5)
     }
 
