@@ -462,7 +462,7 @@ export class Catcher {
   startEvent() {
     let then = this;
 
-    then.startBtn.disabled = true;
+    // then.startBtn.disabled = true;
 
     if (this.timeLine._time >= this.timeLine.endTime() || this.timeLine._time === 0) {
       this.cleanItems(function () {
@@ -522,6 +522,13 @@ export class Catcher {
 
   }
 
+  /**
+   * 觸發開始遊戲
+   */
+  play() {
+    this.startEvent();
+  }
+
   empty(elem) {
     while (elem.hasChildNodes()) {
       elem.removeChild(elem.lastChild);
@@ -555,7 +562,7 @@ export class Catcher {
    */
   timeLineOnStart() {
     if (!this.startCallbackLock) {
-      this.startBtn.disabled = true;
+      // this.startBtn.disabled = true;
       this.startCallbackLock = true;
     }
     this.startCallbackLock = false;
@@ -601,8 +608,8 @@ export class Catcher {
     this.configs.get('initialCallback')();
 
     /** 開始按鈕 */
-    this.setStartEvent(this.startBtn);
+    // this.setStartEvent(this.startBtn);
 
-    this.startBtn.disabled = false;
+    // this.startBtn.disabled = false;
   }
 }

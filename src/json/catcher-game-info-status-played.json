@@ -1,0 +1,5 @@
+{
+  "status": "error",
+  "message": "您今日已玩過，請明天再來！",
+  "redirect": "/"
+}

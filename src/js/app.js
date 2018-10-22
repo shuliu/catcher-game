@@ -5,15 +5,18 @@ import { Catcher as CatcherGame } from './Catcher.js';
 import Promise from "promise";
 import axios from "axios";
 import qs from 'qs';
-import { default as APIS } from './vendor/apis';
+import { default as APIs } from './vendor/apis';
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  /**
+   * 取得遊戲資訊
+   * url: 遊戲資訊 api, 可替換成錯誤資訊路徑 (webpack.config.js devServer setup 內的資訊)
+   */
   const gamePromise = new Promise((resolve, reject) => {
     axios({
         method: 'get',
-        url: APIS.GET_INFO_API,
-        // responseType: 'json',
+        url: APIs.GET_INFO_API_ERROR_DATE,
       })
       .then((res) => resolve(res))
       .catch(error => reject(error));
@@ -86,6 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if(value.data.status === 'play') {
       hideLoading();
       const myCatcher = new CatcherGame(gameConfig);
+      myCatcher.play();
+      hideModal('.hint');
     }
   };
 
@@ -145,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // axios post 寫法
       axios({
         method: 'post',
-        url: APIS.POST_INFO_API,
+        url: APIs.POST_INFO_API,
         data: qs.stringify({ score }),
         responseType: 'json',
       })
@@ -158,6 +163,12 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch(ajaxError);
   };
+
+  const checkToStart = () => {
+    gamePromise
+    .then(checkCanPlay)
+    .catch(ajaxError);
+  }
 
   const gameConfig = {
     container: '#gameBox',      // 遊戲框
@@ -181,9 +192,11 @@ document.addEventListener("DOMContentLoaded", () => {
       1000
     ], // 面額
     initialCallback: () => {
-      showModal('.hint');
+      console.log('initial');
+      // showModal('.hint');
     },
     startCallback: () => {
+      console.log('start');
       hideModal('.hint');
     },
     endCallback: (score, time) => {
@@ -192,8 +205,19 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   showLoading();
-  gamePromise
-    .then(checkCanPlay)
-    .catch(ajaxError);
+
+  // initial
+
+  // 開始按鈕
+  const checkToStartBtn = document.querySelector('#js-check-to-start-btn');
+  if(checkToStartBtn === null) {
+    throw('please building #js-check-to-start-btn btn');
+  }
+  checkToStartBtn.addEventListener('click', checkToStart);
+  checkToStartBtn.addEventListener('touchend', checkToStart);
+
+  showModal('.hint');
+  hideLoading();
+
 
 });
