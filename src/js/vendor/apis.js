@@ -23,7 +23,7 @@ let GET_INFO_API_ERROR_OVER = `${EVENT_URL}/getInfo-over`;
 let GET_INFO_API_ERROR_PLAY = `${EVENT_URL}/getInfo-play`;
 
 /** @var {string} POST_INFO_API 遊戲結束後發送點數 api */
-let POST_INFO_API = '/eventsite/Catcher/201810/post';
+let POST_INFO_API = `${EVENT_URL}/post`;
 
 // PHP端 api 路徑判斷
 if(

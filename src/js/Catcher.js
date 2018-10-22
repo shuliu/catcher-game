@@ -566,6 +566,7 @@ export class Catcher {
       this.startCallbackLock = true;
     }
     this.startCallbackLock = false;
+    this.endCallbackLock = false;
   }
 
   /**
