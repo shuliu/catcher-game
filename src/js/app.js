@@ -131,6 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const popupMessageToRedirect = (message = '', url = '') => {
     if(message !== '') {
       alert(message);
+      // console.log(message);
     }
     if(url !== '') {
       console.log(url);
@@ -192,11 +193,11 @@ document.addEventListener("DOMContentLoaded", () => {
       1000
     ], // 面額
     initialCallback: () => {
-      console.log('initial');
+      // console.log('initial');
       // showModal('.hint');
     },
     startCallback: () => {
-      console.log('start');
+      // console.log('start');
       hideModal('.hint');
     },
     endCallback: (score, time) => {
@@ -219,5 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
   showModal('.hint');
   hideLoading();
 
+  // test //
+  // const myCatcher = new CatcherGame(gameConfig);
 
 });

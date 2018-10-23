@@ -11,8 +11,15 @@ import EventControl from './vendor/EventControl';
 // import './vendor/polyfill';
 import './vendor/prototype';
 import defaultConfigs from './vendor/defaultConfigs';
-import helpers from './vendor/helpers';
 import Timer from './vendor/Timer';
+import {
+  objToStrMap,
+  randomRound,
+  random,
+  getTranslate,
+  shuffle,
+  animateState,
+} from './vendor/helpers';
 
 export class Catcher {
 
@@ -107,7 +114,7 @@ export class Catcher {
     Object.assign(defaultConfigs, configs);
 
     this.configs = null;
-    this.configs = helpers.objToStrMap(defaultConfigs);
+    this.configs = objToStrMap(defaultConfigs);
 
     let thenElements = this.elements;
     this.configs.get('elements').forEach((config, key) => {
@@ -153,7 +160,7 @@ export class Catcher {
     let allPoints = [];
     let newPoint = 0;
     do {
-      newPoint = list.get(helpers.randomRound(0, list.size - 1) + '') || 0;
+      newPoint = list.get(randomRound(0, list.size - 1) + '') || 0;
       if (newPoint > list[0]) {
         list.shift();
       }
@@ -172,7 +179,7 @@ export class Catcher {
    * @returns {array} bombs list
    */
   bombList(pointList) {
-    let total = helpers.randomRound(this.baseConfig.bomb.limit[0], this.baseConfig.bomb.limit[1]);
+    let total = randomRound(this.baseConfig.bomb.limit[0], this.baseConfig.bomb.limit[1]);
     let bombs = [];
     for (let index = 0; index < total; index++) {
       bombs.push(this.configs.get('bombKey'));
@@ -231,7 +238,7 @@ export class Catcher {
     // 非炸彈類加入彩球
     if (point !== bombKey) {
       let colors = this.configs.get('giftColors');
-      let ballColor = createElement(colors.get(helpers.randomRound(0, colors.size - 1) + ''));
+      let ballColor = createElement(colors.get(randomRound(0, colors.size - 1) + ''));
       elem.appendChild(ballColor);
     }
 
@@ -240,7 +247,7 @@ export class Catcher {
     let maxTime = gameTime - maxMoveTime; // 最大可使用時間 (總遊戲時間 - 最大落下時間)
     let defY = -this.baseConfig.moveX.width; // 起始掉落 Y 軸
     let maxY = container.offsetHeight - this.baseConfig.move.width - defY; // 落下 Y 軸距離 (固定)
-    let randX = helpers.random(
+    let randX = random(
       this.baseConfig.move.width, (container.offsetWidth - this.baseConfig.move.width)); // 起始 X 軸位置 (隨機))
 
     let baseAddTime = 3.4;
@@ -255,7 +262,7 @@ export class Catcher {
       baseAddTime = 3.1;
     }
 
-    let time = helpers.random(2, maxMoveTime); // 掉落時間
+    let time = random(2, maxMoveTime); // 掉落時間
     let delay = this.baseConfig.goTime === 0 ?
       this.baseConfig.goTime :
       this.baseConfig.goTime + time / baseAddTime; // 落下時間
@@ -265,7 +272,7 @@ export class Catcher {
 
     if (delay > maxTime) {
       delay = maxTime - maxMoveTime;
-      this.baseConfig.goTime = helpers.random(6, maxTime * 0.3);
+      this.baseConfig.goTime = random(6, maxTime * 0.3);
 
     }
     if (total === index) {
@@ -314,7 +321,7 @@ export class Catcher {
         catcher.classList.add('dark');
 
         let explosion = this.elements.get('explosion');
-        let area = helpers.getTranslate(catcher);
+        let area = getTranslate(catcher);
         let explosionLocation = {
           x: -70,
           y: -300,
@@ -474,7 +481,7 @@ export class Catcher {
     this.eventControl.start();
 
     // 點數
-    let points = helpers.shuffle(this.setPoints(
+    let points = shuffle(this.setPoints(
       this.configs.get('total'),
       this.configs.get('billList')
     ));
@@ -485,9 +492,9 @@ export class Catcher {
     if (points.length > this.baseConfig.bomb.first) {
       // 重新建立亂數內容 (前 this.bomb.first 不能是炸彈)
       this.baseConfig.pointList = mergeList.slice(0, this.baseConfig.bomb.first)
-        .concat(helpers.shuffle(mergeList.slice(this.baseConfig.bomb.first)));
+        .concat(shuffle(mergeList.slice(this.baseConfig.bomb.first)));
     } else {
-      this.baseConfig.pointList = mergeList.concat(helpers.shuffle(mergeList));
+      this.baseConfig.pointList = mergeList.concat(shuffle(mergeList));
     }
 
     // console.log(this.pointList);
@@ -575,7 +582,7 @@ export class Catcher {
     /** 球停止滾動 css animation */
     gifts.forEach((item, key) => {
       if (item.children.length > 0) {
-        helpers.animateState(item.children[0], 'paused');
+        animateState(item.children[0], 'paused');
       }
     });
 

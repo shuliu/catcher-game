@@ -16,8 +16,17 @@ export default class TargetMove {
     /** @var deviceSize 遊戲範圍判斷, 小於 800 若判定為行動裝置尺寸 */
     this.deviceSize = 800;
 
+    /** @var paddingHeight catcher 墊高的高度 */
+    this.paddingHeight = 60;
+
     this.Control = ControlElementDTO;
     this.myDrag = null;
+
+    /** 判斷目前裝置 */
+    this.device = this.Control.box.clientWidth < this.deviceSize ? 'mobile' : 'desktop';
+    if (this.device === 'mobile') {
+      this.paddingHeight = 20;
+    }
 
   }
 
@@ -36,9 +45,9 @@ export default class TargetMove {
    */
   addDragEvent() {
 
-    let device = this.Control.box.clientWidth < this.deviceSize ? 'mobile' : 'desktop';
+
     let maxX = this.Control.box.clientWidth - (this.Control.element.clientWidth * 0.5); // css scale(.5)
-    if (device === 'mobile') {
+    if (this.device === 'mobile') {
       maxX = this.Control.box.clientWidth - (this.Control.element.clientWidth * 0.4); // css scale(.5)
     }
 
@@ -70,11 +79,22 @@ export default class TargetMove {
    */
   setLocation() {
     this.Control.element.style.display = 'inline-block';
-    const firstLocation = {
-      x: (this.Control.box.clientWidth / 2 - this.Control.element.clientWidth / 2),
-      y: (this.Control.box.offsetHeight - this.Control.element.offsetHeight) + this.Control.element.offsetHeight * 0.4,
+
+    /** @const boxReal box 真實寬高座標資訊 */
+    const boxReal = this.Control.box.getBoundingClientRect();
+    /** @const elmReal element 真實寬高座標資訊 */
+    const elmReal = this.Control.element.getBoundingClientRect();
+
+    /** @var firstLocation catcher 起始座標 */
+    let firstLocation = {
+      x: (boxReal.width / 2 - elmReal.width / 2),
+      y: boxReal.height - elmReal.height - this.paddingHeight,
     };
 
+    if (this.device === 'mobile') {
+      let bodyHeight = document.body.offsetHeight;
+      firstLocation.y = bodyHeight - elmReal.height - this.paddingHeight;
+    }
 
     TweenLite.set(this.Control.element, firstLocation);
   }

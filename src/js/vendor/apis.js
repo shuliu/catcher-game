@@ -1,4 +1,6 @@
 
+import { getLastSegmentOfURL } from './helpers';
+
 const TITLE = '神降好運 狂歡接彩球';
 
 /** @var {string} WEB_URL online 網址 */
@@ -24,13 +26,15 @@ let GET_INFO_API_ERROR_PLAY = `${EVENT_URL}/getInfo-play`;
 
 /** @var {string} POST_INFO_API 遊戲結束後發送點數 api */
 let POST_INFO_API = `${EVENT_URL}/post`;
+/** @var {string} POST_INFO_API_ERROR_PLAY 已經領過點數 (給點 status 3) */
+let POST_INFO_API_ERROR_PLAY = `${EVENT_URL}/post-play`;
 
 // PHP 端 api 路徑判斷
 if(
   location.host.indexOf('.local') >= 0 ||
   location.host.indexOf('senao.com.tw') >= 0
 ) {
-  EVENT_KEY = location.href.substr(location.href.lastIndexOf('/') + 1);
+  EVENT_KEY = getLastSegmentOfURL();
   WEB_URL = `//${location.host}`;
   EVENT_URL = `${WEB_URL}/eventsite/Catcher/${EVENT_KEY}`;
   GET_INFO_API = `${EVENT_URL}/getInfo`;
@@ -39,6 +43,7 @@ if(
   GET_INFO_API_ERROR_OVER = GET_INFO_API;
   GET_INFO_API_ERROR_PLAY = GET_INFO_API;
   POST_INFO_API = `${EVENT_URL}/post`;
+  POST_INFO_API_ERROR_PLAY = POST_INFO_API;
 }
 
 const APIs = {
@@ -50,7 +55,8 @@ const APIs = {
   GET_INFO_API_ERROR_LOGIN,
   GET_INFO_API_ERROR_OVER,
   GET_INFO_API_ERROR_PLAY,
-  POST_INFO_API
+  POST_INFO_API,
+  POST_INFO_API_ERROR_PLAY
 };
 
 export default APIs;

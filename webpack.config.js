@@ -24,6 +24,7 @@ const getInfoDataOver = require('./src/json/catcher-game-info-status-over');
 const getInfoDataPlayed = require('./src/json/catcher-game-info-status-played');
 /** @var {object} postData 送出得點資訊領點 */
 const postData = require('./src/json/catcher-game-post');
+const postDataStateusPlayed = require('./src/json/catcher-game-post-status-played');
 const TITLE = '神降好運 狂歡接彩球';
 const DESC = '11/5-11/12每日一次遊戲機會，於遊戲時間30秒內，移動下方小丑接取落下的彩球，每顆彩球內含神腦紅利點數，接越多賺越多！';
 const WEB_URL = 'https://shuliu.github.io/';
@@ -93,16 +94,18 @@ let config = {
     before(app) {
       // 取得活動資訊 - 不在活動期間
       app.get('/eventsite/Catcher/devKey/getInfo-date', (req, res) => res.send(getInfoDataDate))
-      // 取得活動資訊 -  未登入
+      // 取得活動資訊 - 未登入
       app.get('/eventsite/Catcher/devKey/getInfo-login', (req, res) => res.send(getInfoDataLogin))
-      // 取得活動資訊 -  超過當日人數
+      // 取得活動資訊 - 超過當日人數
       app.get('/eventsite/Catcher/devKey/getInfo-over', (req, res) => res.send(getInfoDataOver))
-      // 取得活動資訊 -  本日已玩過
+      // 取得活動資訊 - 本日已玩過
       app.get('/eventsite/Catcher/devKey/getInfo-play', (req, res) => res.send(getInfoDataPlayed))
-      // 取得活動資訊 -  可遊戲
+      // 取得活動資訊 - 可遊戲
       app.get('/eventsite/Catcher/devKey/getInfo', (req, res) => res.send(getInfoData))
       // 遊戲結束發送遊戲得分
       app.post('/eventsite/Catcher/devKey/post', (req, res) => res.send(postData))
+      // 遊戲結束發送遊戲得分 - 已經領過了
+      app.post('/eventsite/Catcher/devKey/post-play', (req, res) => res.send(postDataStateusPlayed))
     },
   },
   plugins: [
