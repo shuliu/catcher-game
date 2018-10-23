@@ -16,6 +16,7 @@ export default {
   hitKey: 'hit', // 碰撞 class 名稱
   total: 20000,  // 總點數
   billList: [1000, 800, 600, 400, 200], // 面額
+  bombLimit: [15, 20], // 炸彈數量 (亂數範圍)
   gameTime: 30, // 遊戲時間
   initialCallback: () => {}, // initial callback
   startCallback: () => {}, // 遊戲開始 callback

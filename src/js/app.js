@@ -192,6 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
       600, 600,
       1000
     ], // 面額
+    bombLimit: [15, 20], // 炸彈數量 (亂數範圍)
     initialCallback: () => {
       // console.log('initial');
       // showModal('.hint');

@@ -32,7 +32,6 @@ export class Catcher {
       pointList: [], // 禮物及炸彈數量總
       score: 0, // 積分
       bomb: {
-        limit: [15, 20], // 炸彈數量 (亂數範圍)
         first: 5, // 炸彈起始位置
       },
       goTime: 0, // delay time (累加)
@@ -179,7 +178,8 @@ export class Catcher {
    * @returns {array} bombs list
    */
   bombList(pointList) {
-    let total = randomRound(this.baseConfig.bomb.limit[0], this.baseConfig.bomb.limit[1]);
+    let bombLimit = this.configs.get('bombLimit');
+    let total = randomRound(bombLimit.get('0'), bombLimit.get('1'));
     let bombs = [];
     for (let index = 0; index < total; index++) {
       bombs.push(this.configs.get('bombKey'));
