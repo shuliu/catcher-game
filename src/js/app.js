@@ -172,11 +172,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const gameConfig = {
-    container: '#gameBox',      // 遊戲框
+    container: '#gameBox',      // 遊戲容器
     scoreBoard: '#score-board', // 計分板
     timerBoard: '#timer-board', // 倒數計時板
     startBtn: '#js-start-btn',  // 綁定開始按鈕
-    giftColors: ['.ball', '.ball_2', '.ball_3', '.ball_4', '.ball_5',],
+    giftColors: ['.ball', '.ball_2', '.ball_3', '.ball_4', '.ball_5',], // 彩球 class
     elements: {
       gift: '.gift',              // 彩球
       sensingArea: '#realcatcher', // 接球員 (感應區)

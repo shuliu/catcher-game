@@ -14,20 +14,16 @@ export default class TargetMove {
   constructor(ControlElementDTO) {
 
     /** @var deviceSize 遊戲範圍判斷, 小於 800 若判定為行動裝置尺寸 */
-    this.deviceSize = 800;
-
-    /** @var paddingHeight catcher 墊高的高度 */
-    this.paddingHeight = 60;
+    this.deviceSize = 768;
 
     this.Control = ControlElementDTO;
     this.myDrag = null;
 
     /** 判斷目前裝置 */
     this.device = this.Control.box.clientWidth < this.deviceSize ? 'mobile' : 'desktop';
-    if (this.device === 'mobile') {
-      this.paddingHeight = 20;
-    }
 
+    /** @var paddingHeight catcher 墊高的高度 */
+    this.paddingHeight = this.device === 'mobile' ? 20 : 60;
   }
 
   /** @var {Draggable} drag 抓取事件 */
@@ -92,7 +88,9 @@ export default class TargetMove {
     };
 
     if (this.device === 'mobile') {
-      let bodyHeight = document.body.offsetHeight;
+      let bodyHeight = document.body.offsetHeight > boxReal.height
+        ? boxReal.height : document.body.offsetHeight;
+
       firstLocation.y = bodyHeight - elmReal.height - this.paddingHeight;
     }
 
